@@ -1,0 +1,34 @@
+/* 主题公共样式（被 App.vue @import，全局可用）—— 变量在 uni.scss */
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: $ink;
+  margin: 8rpx 32rpx 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.section-more {
+  font-size: 24rpx;
+  font-weight: 500;
+  color: $primary;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 10rpx 28rpx;
+  border-radius: 999rpx;
+  font-size: 25rpx;
+  color: $ink-light;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1rpx solid $line;
+  margin-right: 16rpx;
+}
+.chip.active {
+  background: $primary;
+  border-color: $primary;
+  color: #fff;
+  font-weight: 600;
+}

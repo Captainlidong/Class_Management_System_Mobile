@@ -1,0 +1,18 @@
+/* uni-app 每个页面的 style 编译都会自动注入本文件 —— 只放 SCSS 变量 */
+
+/* —— 奶油马卡龙主题色 —— */
+$cream-bg: #fdf8f2;        // 奶油底
+$card-bg: #ffffff;         // 卡片白
+$ink: #4a4258;             // 主文字（暖灰紫）
+$ink-light: #9b93a9;       // 次要文字
+$line: #f2e9e0;            // 分隔线
+
+$primary: #7fb5e8;         // 海盐蓝（主操作）
+$peach: #ffb5a7;           // 蜜桃
+$matcha: #a3d9a5;          // 抹茶（已完成/成功）
+$butter: #ffd98e;          // 奶黄（未完成/提醒）
+$taro: #c9b6e4;            // 香芋
+$berry: #f49fb6;           // 莓果粉（危险/删除）
+
+$radius-card: 32rpx;
+$radius-btn: 28rpx;

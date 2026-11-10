@@ -1,0 +1,66 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": { "navigationBarTitleText": "班级管理助手" }
+    },
+    {
+      "path": "pages/login/login",
+      "style": { "navigationBarTitleText": "登录", "navigationStyle": "custom" }
+    },
+    {
+      "path": "pages/collection/list",
+      "style": { "navigationBarTitleText": "资料收集与分发", "enablePullDownRefresh": true }
+    },
+    {
+      "path": "pages/collection/detail",
+      "style": { "navigationBarTitleText": "任务详情", "enablePullDownRefresh": true }
+    },
+    {
+      "path": "pages/collection/create",
+      "style": { "navigationBarTitleText": "新建任务" }
+    },
+    {
+      "path": "pages/leave/list",
+      "style": { "navigationBarTitleText": "请假记录", "enablePullDownRefresh": true }
+    },
+    {
+      "path": "pages/leave/edit",
+      "style": { "navigationBarTitleText": "请假登记" }
+    },
+    {
+      "path": "pages/scholarship/list",
+      "style": { "navigationBarTitleText": "奖学金统计", "enablePullDownRefresh": true }
+    },
+    {
+      "path": "pages/scholarship/detail",
+      "style": { "navigationBarTitleText": "批次详情" }
+    },
+    {
+      "path": "pages/more/more",
+      "style": { "navigationBarTitleText": "更多" }
+    },
+    {
+      "path": "pages/more/students",
+      "style": { "navigationBarTitleText": "基准名单" }
+    },
+    {
+      "path": "pages/more/announcements",
+      "style": { "navigationBarTitleText": "群发素材", "enablePullDownRefresh": true }
+    },
+    {
+      "path": "pages/more/check",
+      "style": { "navigationBarTitleText": "名单筛查" }
+    },
+    {
+      "path": "pages/more/history",
+      "style": { "navigationBarTitleText": "筛查历史", "enablePullDownRefresh": true }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "班级管理助手",
+    "navigationBarBackgroundColor": "#FDF8F2",
+    "backgroundColor": "#FDF8F2"
+  }
+}
