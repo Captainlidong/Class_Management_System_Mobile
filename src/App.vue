@@ -3,6 +3,11 @@ import { useAuthStore } from './stores/auth'
 
 export default {
   onLaunch() {
+    // #ifdef APP-PLUS
+    // App 端是 web-view 壳：登录态由网页（同源 Cookie）自己管理，
+    // 壳的 JS 上下文没有域名基准，发起 /api 请求必然失败，直接跳过
+    return
+    // #endif
     const auth = useAuthStore()
     auth.bindUnauthorized()
     auth.refresh()
