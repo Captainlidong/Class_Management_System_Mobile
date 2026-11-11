@@ -1,4 +1,9 @@
 <template>
+  <!-- #ifdef APP-PLUS -->
+  <!-- APK 壳方案：App 端直接全屏加载线上 H5（Cookie 同源、更新即时生效） -->
+  <web-view :src="appUrl"></web-view>
+  <!-- #endif -->
+  <!-- #ifndef APP-PLUS -->
   <view class="page">
     <view class="greet-card card">
       <view class="greet-row">
@@ -75,6 +80,7 @@
     <view class="tabbar-spacer"></view>
     <TabBar current="index" />
   </view>
+  <!-- #endif -->
 </template>
 
 <script>
@@ -91,7 +97,9 @@ export default {
       tasks: [],
       leaveStats: {},
       studentsCount: 0,
-      loaded: false
+      loaded: false,
+      // APK 壳加载的线上地址（方案 A：web-view 壳）
+      appUrl: 'http://your-server-ip/m/'
     }
   },
   computed: {
@@ -106,6 +114,10 @@ export default {
     }
   },
   onShow() {
+    // #ifdef APP-PLUS
+    // App 端是 web-view 壳，一切逻辑在网页内，不发请求不做鉴权
+    return
+    // #endif
     const auth = this.auth
     if (!auth.statusLoaded) {
       auth.refresh().then(() => this.guardAndLoad())
@@ -113,6 +125,27 @@ export default {
       this.guardAndLoad()
     }
   },
+  // #ifdef APP-PLUS
+  /** Android 返回键：优先让网页后退，退无可退再退出应用 */
+  onBackPress() {
+    const page = typeof this.$getAppWebview === 'function' ? this.$getAppWebview() : null
+    const wv = page && page.children ? page.children()[0] : null
+    if (wv) {
+      try {
+        wv.canGoBack((evt) => {
+          if (evt && evt.canBack) {
+            wv.back()
+          } else {
+            plus.runtime.quit()
+          }
+        })
+      } catch (err) {
+        plus.runtime.quit()
+      }
+      return true
+    }
+  },
+  // #endif
   onPullDownRefresh() {
     this.load().finally(() => uni.stopPullDownRefresh())
   },
