@@ -15,6 +15,33 @@
       </view>
     </view>
 
+    <template v-if="urgentTodos.length">
+      <view class="section-title">
+        <text>⏰ 待办提醒</text>
+        <text class="section-more" @tap="goTodos">全部 ›</text>
+      </view>
+      <view class="card todo-card">
+        <view
+          v-for="(t, idx) in urgentTodos"
+          :key="t.id"
+          class="todo-row"
+          :class="{ last: idx === urgentTodos.length - 1 }"
+          @tap="goTodos"
+        >
+          <view class="todo-badge" :class="t.overdue ? 'badge-overdue' : (t.dueToday ? 'badge-today' : 'badge-normal')">
+            {{ t.overdue ? '已过期' : (t.dueToday ? '今天' : '待办') }}
+          </view>
+          <view class="todo-row-main">
+            <text class="todo-title">{{ t.title }}</text>
+            <text v-if="t.dueAt" class="todo-due">⏱ {{ fmtDateTime(t.dueAt) }}</text>
+          </view>
+        </view>
+        <text v-if="pendingTodos.length > urgentTodos.length" class="todo-more" @tap="goTodos">
+          还有 {{ pendingTodos.length - urgentTodos.length }} 件待办 ›
+        </text>
+      </view>
+    </template>
+
     <view class="section-title">
       <text>📋 资料收集与分发</text>
       <text class="section-more" @tap="goCollection">全部 ›</text>
@@ -87,8 +114,8 @@
 import TabBar from '../../components/TabBar.vue'
 import EmptyState from '../../components/EmptyState.vue'
 import { useAuthStore } from '../../stores/auth'
-import { collectionTasks, leaveStats, studentsList } from '../../api'
-import { greeting, todayLabel, isPassed } from '../../utils/format'
+import { collectionTasks, leaveStats, studentsList, todoList } from '../../api'
+import { greeting, todayLabel, isPassed, fmtDateTime } from '../../utils/format'
 
 export default {
   components: { TabBar, EmptyState },
@@ -97,6 +124,7 @@ export default {
       tasks: [],
       leaveStats: {},
       studentsCount: 0,
+      pendingTodos: [],
       loaded: false,
       // APK 壳加载的线上地址（方案 A：web-view 壳）
       appUrl: 'http://your-server-ip/m/'
@@ -111,6 +139,10 @@ export default {
     },
     dateText() {
       return todayLabel()
+    },
+    /** 未完成待办（服务端已按紧迫度排序），首页卡只展示前 3 条 */
+    urgentTodos() {
+      return this.pendingTodos.slice(0, 3)
     }
   },
   onShow() {
@@ -159,17 +191,22 @@ export default {
     },
     async load() {
       try {
-        const [tasks, stats, students] = await Promise.all([
+        const [tasks, stats, students, todos] = await Promise.all([
           collectionTasks(),
           leaveStats().catch(() => ({})),
-          studentsList().catch(() => ({ count: 0 }))
+          studentsList().catch(() => ({ count: 0 })),
+          todoList().catch(() => [])
         ])
         this.tasks = (tasks || []).map((t) => ({ ...t, passed: isPassed(t.deadline) }))
         this.leaveStats = stats || {}
         this.studentsCount = (students && students.count) || 0
+        this.pendingTodos = (todos || []).filter((t) => !t.done)
       } catch (e) {
         /* 拦截器已提示 */
       }
+    },
+    goTodos() {
+      uni.navigateTo({ url: '/pages/more/todos' })
     },
     openTask(t) {
       uni.navigateTo({ url: `/pages/collection/detail?id=${t.id}` })
@@ -324,5 +361,67 @@ export default {
   font-size: 26rpx;
   font-weight: 600;
   color: $ink;
+}
+
+/* —— 待办提醒卡 —— */
+.todo-card {
+  padding: 8rpx 26rpx;
+}
+.todo-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 22rpx 0;
+  border-bottom: 1rpx solid $line;
+}
+.todo-row.last {
+  border-bottom: none;
+}
+.todo-badge {
+  flex-shrink: 0;
+  font-size: 22rpx;
+  font-weight: 700;
+  padding: 8rpx 18rpx;
+  border-radius: 999rpx;
+  color: #fff;
+}
+.badge-overdue {
+  background: #f49fb6;
+  color: #a02040;
+}
+.badge-today {
+  background: $butter;
+  color: #8a5b00;
+}
+.badge-normal {
+  background: rgba(127, 181, 232, 0.3);
+  color: #4d8ecf;
+}
+.todo-row-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.todo-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: $ink;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.todo-due {
+  font-size: 22rpx;
+  color: $ink-light;
+  margin-top: 4rpx;
+}
+.todo-more {
+  display: block;
+  text-align: center;
+  font-size: 24rpx;
+  color: $primary;
+  padding: 16rpx 0 10rpx;
+  font-weight: 600;
 }
 </style>

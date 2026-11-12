@@ -11,6 +11,12 @@
     </view>
 
     <view class="card menu-card">
+      <view class="menu-cell" @tap="go('/pages/more/todos')">
+        <text class="menu-icon">⏰</text>
+        <text class="menu-name">待办事务</text>
+        <text class="menu-extra">{{ pendingCount ? pendingCount + ' 件未完成' : '' }}</text>
+        <text class="menu-arrow">›</text>
+      </view>
       <view class="menu-cell" @tap="go('/pages/more/students')">
         <text class="menu-icon">🌸</text>
         <text class="menu-name">基准名单</text>
@@ -56,12 +62,12 @@
 <script>
 import TabBar from '../../components/TabBar.vue'
 import { useAuthStore } from '../../stores/auth'
-import { studentsList } from '../../api'
+import { studentsList, todoList } from '../../api'
 
 export default {
   components: { TabBar },
   data() {
-    return { studentsCount: 0 }
+    return { studentsCount: 0, pendingCount: 0 }
   },
   computed: {
     auth() {
@@ -76,6 +82,12 @@ export default {
       try {
         const data = await studentsList()
         this.studentsCount = (data && data.count) || 0
+      } catch (e) {
+        /* 拦截器已提示 */
+      }
+      try {
+        const todos = (await todoList()) || []
+        this.pendingCount = todos.filter((t) => !t.done).length
       } catch (e) {
         /* 拦截器已提示 */
       }

@@ -57,6 +57,12 @@ export const announcementMarkSent = (id) => post(`/announcements/${id}/mark-sent
 export const announcementUnmarkSent = (id) => post(`/announcements/${id}/unmark-sent`)
 export const announcementDelete = (id) => del(`/announcements/${id}`)
 
+/* —— 待办事务 —— */
+export const todoList = () => get('/todos')
+export const todoCreate = (payload) => post('/todos', payload)
+export const todoUpdate = (id, payload) => patch(`/todos/${id}`, payload)
+export const todoDelete = (id) => del(`/todos/${id}`)
+
 /* —— 名单筛查 —— */
 export const checkRun = (payload) => post('/check', payload)
 export const checkRecords = (params) => get('/check-records', params)

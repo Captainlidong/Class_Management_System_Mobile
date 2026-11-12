@@ -46,6 +46,10 @@
       "style": { "navigationBarTitleText": "更多" }
     },
     {
+      "path": "pages/more/todos",
+      "style": { "navigationBarTitleText": "待办事务" }
+    },
+    {
       "path": "pages/more/students",
       "style": { "navigationBarTitleText": "基准名单" }
     },
