@@ -1,18 +1,29 @@
-/* uni-app 每个页面的 style 编译都会自动注入本文件 —— 只放 SCSS 变量 */
+/* uni-app 每个页面的 style 编译都会自动注入本文件 —— 主题变量（喵班 · 奶油治愈系） */
 
-/* —— 奶油马卡龙主题色 —— */
-$cream-bg: #fdf8f2;        // 奶油底
-$card-bg: #ffffff;         // 卡片白
-$ink: #4a4258;             // 主文字（暖灰紫）
-$ink-light: #9b93a9;       // 次要文字
-$line: #f2e9e0;            // 分隔线
+/* —— 底色与卡片 —— */
+$cream-bg: #F7F2E7;        // 奶油底
+$card-bg: #FFFFFF;         // 卡片白
+$sage-card: #DCE8DC;       // 鼠尾草浅绿卡
+$sage-light: #E9F0E9;      // 更浅的鼠尾草
 
-$primary: #7fb5e8;         // 海盐蓝（主操作）
-$peach: #ffb5a7;           // 蜜桃
-$matcha: #a3d9a5;          // 抹茶（已完成/成功）
-$butter: #ffd98e;          // 奶黄（未完成/提醒）
-$taro: #c9b6e4;            // 香芋
-$berry: #f49fb6;           // 莓果粉（危险/删除）
+/* —— 文字 —— */
+$ink: #2F3B33;             // 墨绿灰主文字
+$ink-light: #8A9A8E;       // 次级灰绿
+$line: #E8E2D4;            // 奶油分隔线
 
+/* —— 主色系 —— */
+$primary: #3E5C4B;         // 深林绿（主操作）
+$primary-deep: #2F4838;    // 更深绿（强调）
+$primary-soft: rgba(62, 92, 75, 0.12);  // 主色淡底
+
+/* —— 语义/点缀色（治愈系柔和版） —— */
+$matcha: #8FB79B;          // 中鼠尾草绿（完成/收集，可配白字）
+$peach: #E8B4A0;           // 陶土蜜桃（分发/暖点缀，可配白字）
+$butter: #E3CFA0;          // 暖赭黄（待办/提醒底）
+$taro: #CBDACB;            // 浅鼠尾草（标签底）
+$berry: #C96F5E;           // 陶土红（危险/删除）
+$warn: #D9A441;            // 暖赭（到期提醒文字）
+
+/* —— 圆角 —— */
 $radius-card: 32rpx;
-$radius-btn: 28rpx;
+$radius-btn: 999rpx;       // 胶囊按钮（参考图样式）

@@ -31,7 +31,7 @@
       <EmptyState icon="⏰" text="还没有待办事项，点右下角添加" />
     </view>
 
-    <view class="fab" @tap="openCreate">➕</view>
+    <view class="fab" @tap="openCreate"><AppIcon name="plus" :size="30" /></view>
 
     <!-- 新建 / 编辑 弹层 -->
     <view class="overlay" v-if="overlay" @tap="overlay = ''">
@@ -66,6 +66,7 @@
 
 <script>
 import EmptyState from '../../components/EmptyState.vue'
+import AppIcon from '../../components/AppIcon.vue'
 import { todoList, todoCreate, todoUpdate, todoDelete } from '../../api'
 import { fmtDateTime } from '../../utils/format'
 
@@ -74,7 +75,7 @@ function pad(n) {
 }
 
 export default {
-  components: { EmptyState },
+  components: { EmptyState, AppIcon },
   data() {
     return {
       todos: [],
@@ -165,7 +166,7 @@ export default {
       uni.showModal({
         title: '删除待办',
         content: `删除「${t.title}」？不可恢复。`,
-        confirmColor: '#e06c75',
+        confirmColor: '#C96F5E',
         success: async (res) => {
           if (!res.confirm) return
           try {
@@ -210,7 +211,7 @@ export default {
   width: 44rpx;
   height: 44rpx;
   border-radius: 50%;
-  border: 2rpx solid #e0d6c8;
+  border: 2rpx solid #E8E2D4;
   color: #fff;
   font-size: 26rpx;
   display: flex;
@@ -251,7 +252,7 @@ export default {
   margin-top: 6rpx;
 }
 .todo-due.overdue {
-  color: #e06c75;
+  color: #C96F5E;
   font-weight: 600;
 }
 .todo-actions {
@@ -262,7 +263,7 @@ export default {
 }
 .todo-action {
   font-size: 25rpx;
-  color: #4d8ecf;
+  color: #3E5C4B;
   font-weight: 600;
 }
 .todo-action.danger {
@@ -281,7 +282,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10rpx 30rpx rgba(127, 181, 232, 0.45);
+  box-shadow: 0 10rpx 30rpx rgba(62, 92, 75, 0.1);
   z-index: 900;
 }
 .overlay {
@@ -336,7 +337,7 @@ export default {
   flex-shrink: 0;
 }
 .placeholder {
-  color: #b8b0c0;
+  color: #B0B4AC;
 }
 .popup-hint {
   display: block;

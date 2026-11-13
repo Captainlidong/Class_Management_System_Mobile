@@ -38,7 +38,7 @@
             </view>
           </view>
           <view class="ann-actions">
-            <text class="ann-action" @tap.stop="uploadFile(a)">📷 拍照/选图上传</text>
+            <text class="ann-action" @tap.stop="uploadFile(a)">拍照/选图上传</text>
             <text class="ann-action" @tap.stop="markSent(a)">{{ a.status === 'sent' ? '取消发送标记' : '标记已发送' }}</text>
             <text class="ann-action danger" @tap.stop="removeAnn(a)">删除</text>
           </view>
@@ -46,7 +46,7 @@
       </view>
     </view>
     <view v-else class="card">
-      <EmptyState icon="📣" text="还没有群发素材" />
+      <EmptyState text="还没有群发素材" />
     </view>
   </view>
 </template>
@@ -126,7 +126,7 @@ export default {
       uni.showModal({
         title: '删除素材',
         content: `删除「${a.title}」？附件与历史版本会一并删除。`,
-        confirmColor: '#e06c75',
+        confirmColor: '#C96F5E',
         success: async (res) => {
           if (!res.confirm) return
           try {
@@ -169,16 +169,16 @@ export default {
   font-size: 21rpx;
   padding: 4rpx 14rpx;
   border-radius: 999rpx;
-  color: #b07d1e;
-  background: rgba(255, 217, 142, 0.3);
+  color: #A2681F;
+  background: rgba(217, 164, 65, 0.16);
 }
 .ann-tag.pinned {
-  color: #8d7bc0;
-  background: rgba(201, 182, 228, 0.24);
+  color: #5B7A62;
+  background: rgba(220, 232, 220, 0.6);
 }
 .ann-tag.sent {
   color: #4e9b52;
-  background: rgba(163, 217, 165, 0.22);
+  background: rgba(220, 232, 220, 0.65);
 }
 .ann-arrow {
   font-size: 26rpx;
@@ -215,7 +215,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #faf5ee;
+  background: #F6F1E6;
   border-radius: 16rpx;
   padding: 14rpx 20rpx;
   margin-bottom: 10rpx;
@@ -230,7 +230,7 @@ export default {
 }
 .ann-file-down {
   font-size: 24rpx;
-  color: #4d8ecf;
+  color: #3E5C4B;
   font-weight: 600;
   flex-shrink: 0;
   margin-left: 14rpx;
@@ -242,7 +242,7 @@ export default {
 }
 .ann-action {
   font-size: 25rpx;
-  color: #4d8ecf;
+  color: #3E5C4B;
   font-weight: 600;
 }
 .ann-action.danger {

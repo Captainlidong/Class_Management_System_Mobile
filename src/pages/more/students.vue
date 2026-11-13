@@ -20,7 +20,7 @@
       </view>
     </view>
     <view v-else class="card">
-      <EmptyState icon="🌸" text="基准名单为空，请先在桌面版导入" />
+      <EmptyState text="基准名单为空，请先在桌面版导入" />
     </view>
   </view>
 </template>
@@ -87,7 +87,7 @@ export default {
 .lock-banner {
   font-size: 24rpx;
   color: $ink-light;
-  background: #faf5ee;
+  background: #F6F1E6;
   border-radius: 16rpx;
   padding: 16rpx 22rpx;
   margin-bottom: 8rpx;

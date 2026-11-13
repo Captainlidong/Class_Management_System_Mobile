@@ -4,20 +4,20 @@
       <text class="batch-name">{{ batch.name }}</text>
       <text v-if="batch.remark" class="batch-remark">{{ batch.remark }}</text>
       <view class="stat-row">
-        <view class="stat-cell" style="background: rgba(201, 182, 228, 0.18)">
+        <view class="stat-cell" style="background: rgba(220, 232, 220, 0.6)">
           <text class="stat-num">{{ batch.awardCount }}</text>
           <text class="stat-label">获奖人数</text>
         </view>
-        <view class="stat-cell" style="background: rgba(163, 217, 165, 0.2)">
+        <view class="stat-cell" style="background: rgba(220, 232, 220, 0.65)">
           <text class="stat-num">{{ batch.receivedCount }}</text>
           <text class="stat-label">已交表</text>
         </view>
-        <view class="stat-cell" style="background: rgba(255, 217, 142, 0.24)">
+        <view class="stat-cell" style="background: rgba(217, 164, 65, 0.16)">
           <text class="stat-num">{{ batch.awardCount - batch.receivedCount }}</text>
           <text class="stat-label">未交表</text>
         </view>
         <view class="ring-wrap">
-          <ProgressRing :size="140" :pct="progress" color="#A3D9A5">
+          <ProgressRing :size="140" :pct="progress" color="#8FB79B">
             <text class="ring-pct">{{ progress }}%</text>
             <text class="ring-sub">已交 {{ batch.receivedCount }}/{{ batch.awardCount }}</text>
           </ProgressRing>
@@ -46,7 +46,7 @@
         <view class="award-left">
           <text class="award-name">{{ a.name }}</text>
           <text class="award-no">{{ a.studentNo || '无学号' }} · {{ a.awardName }}{{ a.amount ? ` · ${a.amount}元` : '' }}</text>
-          <text v-if="a.formReceived && a.receivedAt" class="award-no">🌷 收妥于 {{ fmtDateTime(a.receivedAt) }}</text>
+          <text v-if="a.formReceived && a.receivedAt" class="award-no">收妥于 {{ fmtDateTime(a.receivedAt) }}</text>
         </view>
         <view class="award-right">
           <view class="pill" :class="a.formReceived ? 'pill-done' : 'pill-undone'" @tap="toggleForm(a)">
@@ -56,7 +56,7 @@
       </view>
     </view>
     <view v-else class="card">
-      <EmptyState icon="📋" :text="awards.length ? '没有符合筛选的同学' : '批次暂无获奖记录'" />
+      <EmptyState :text="awards.length ? '没有符合筛选的同学' : '批次暂无获奖记录'" />
     </view>
   </view>
 </template>
@@ -113,7 +113,7 @@ export default {
         await scholarshipMarkReceived(a.id, target)
         a.formReceived = target
         a.receivedAt = target ? new Date().toISOString() : null
-        uni.showToast({ title: target ? `${a.name} 申请表已收到 🌷` : `已标记 ${a.name} 未交表`, icon: 'none' })
+        uni.showToast({ title: target ? `${a.name} 申请表已收到` : `已标记 ${a.name} 未交表`, icon: 'none' })
         this.load()
       } catch (e) {
         /* 拦截器已提示 */
@@ -205,7 +205,7 @@ export default {
   width: 76rpx;
   height: 42rpx;
   border-radius: 999rpx;
-  background: #e8e0d6;
+  background: #E8E2D4;
   position: relative;
   transition: background 0.2s ease;
 }
@@ -265,7 +265,7 @@ export default {
   flex-shrink: 0;
 }
 .pill-money {
-  background: rgba(201, 182, 228, 0.2);
-  color: #8d7bc0;
+  background: rgba(220, 232, 220, 0.6);
+  color: #5B7A62;
 }
 </style>

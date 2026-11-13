@@ -4,7 +4,7 @@ export default {
   props: {
     size: { type: Number, default: 150 },   // rpx
     pct: { type: Number, default: 0 },      // 0-100
-    color: { type: String, default: '#7FB5E8' },
+    color: { type: String, default: '#3E5C4B' },
     track: { type: String, default: '#F3EAE0' },
     holePercent: { type: Number, default: 66 } // 中空占比
   },

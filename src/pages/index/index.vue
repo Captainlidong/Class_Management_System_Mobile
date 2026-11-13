@@ -1,23 +1,21 @@
 <template>
-  <!-- #ifdef APP-PLUS -->
-  <!-- APK 壳方案：App 端直接全屏加载线上 H5（Cookie 同源、更新即时生效） -->
-  <web-view :src="appUrl"></web-view>
-  <!-- #endif -->
-  <!-- #ifndef APP-PLUS -->
   <view class="page">
-    <view class="greet-card card">
-      <view class="greet-row">
-        <view>
-          <text class="greet-hello">{{ greetingText }}{{ auth.username ? '，' + auth.username : '' }}</text>
-          <text class="greet-date">{{ dateText }}</text>
-        </view>
-        <text class="greet-emoji">🌤️</text>
+    <!-- 问候区 -->
+    <view class="greet-row">
+      <view class="greet-left">
+        <text class="greet-hello">{{ greetingText }}{{ auth.username ? '，' + auth.username : '' }}</text>
+        <text class="greet-date">{{ dateText }}</text>
+      </view>
+      <view class="greet-bell" @tap="goTodos">
+        <AppIcon name="bell" :size="22" />
+        <view v-if="pendingTodos.length" class="bell-dot"></view>
       </view>
     </view>
 
-    <template v-if="urgentTodos.length">
+    <!-- 待办提醒卡（未完成时置顶显示） -->
+    <template v-if="pendingTodos.length">
       <view class="section-title">
-        <text>⏰ 待办提醒</text>
+        <text>待办，一件件来</text>
         <text class="section-more" @tap="goTodos">全部 ›</text>
       </view>
       <view class="card todo-card">
@@ -28,12 +26,17 @@
           :class="{ last: idx === urgentTodos.length - 1 }"
           @tap="goTodos"
         >
-          <view class="todo-badge" :class="t.overdue ? 'badge-overdue' : (t.dueToday ? 'badge-today' : 'badge-normal')">
-            {{ t.overdue ? '已过期' : (t.dueToday ? '今天' : '待办') }}
+          <view class="todo-cat">
+            <CatSitting v-if="idx === 0" :width="56" />
+            <CatSleep v-else-if="idx === 1" :width="72" />
+            <CatWave v-else :width="56" />
           </view>
           <view class="todo-row-main">
             <text class="todo-title">{{ t.title }}</text>
-            <text v-if="t.dueAt" class="todo-due">⏱ {{ fmtDateTime(t.dueAt) }}</text>
+            <text v-if="t.dueAt" class="todo-due" :class="{ overdue: t.overdue }">{{ dueLabel(t) }}</text>
+          </view>
+          <view class="todo-badge" :class="t.overdue ? 'badge-overdue' : (t.dueToday ? 'badge-today' : 'badge-normal')">
+            {{ t.overdue ? '已过期' : (t.dueToday ? '今天' : '待办') }}
           </view>
         </view>
         <text v-if="pendingTodos.length > urgentTodos.length" class="todo-more" @tap="goTodos">
@@ -42,83 +45,94 @@
       </view>
     </template>
 
+    <!-- 英雄卡：收集进度 -->
     <view class="section-title">
-      <text>📋 资料收集与分发</text>
+      <text>资料收集与分发</text>
       <text class="section-more" @tap="goCollection">全部 ›</text>
     </view>
-    <view v-if="tasks.length" class="card task-brief-card">
-      <view
-        v-for="t in tasks.slice(0, 3)"
-        :key="t.id"
-        class="task-brief"
-        @tap="openTask(t)"
-      >
-        <view class="task-brief-left">
-          <text class="task-kind-tag" :class="t.kind === 'distribute' ? 'tag-distribute' : 'tag-collect'">
-            {{ t.kind === 'distribute' ? '发' : '收' }}
-          </text>
-          <text class="task-name">{{ t.name }}</text>
+    <view class="hero-card card" @tap="goCollection">
+      <view class="hero-ring">
+        <ProgressRing :size="170" :pct="overallPct" color="#3E5C4B" track="#DCE8DC">
+          <text class="ring-pct">{{ overallPct }}%</text>
+          <text class="ring-label">今日完成</text>
+        </ProgressRing>
+      </view>
+      <view class="hero-right">
+        <text class="hero-num">{{ overallReceived }} / {{ overallTotal }}</text>
+        <text class="hero-unit">件已交 · 已经照顾班级很多啦</text>
+        <view class="hero-btn" @tap.stop="goCollection">
+          <text>查看收集任务</text>
+          <AppIcon name="chevron" :size="14" />
         </view>
-        <text class="task-progress" :class="{ complete: t.received >= t.total && t.total > 0 }">
-          {{ (t.kind === 'distribute' ? '已领 ' : '已交 ') + t.received + '/' + t.total }}
-        </text>
       </view>
-    </view>
-    <view v-else class="card">
-      <EmptyState icon="📋" text="还没有收集任务，去新建一个吧" />
-    </view>
-
-    <view class="section-title"><text>🌙 请假动态</text></view>
-    <view class="card stat-grid">
-      <view class="stat-cell" style="background: rgba(163, 217, 165, 0.18)">
-        <text class="stat-num">{{ leaveStats.activeCount || 0 }}</text>
-        <text class="stat-label">请假中</text>
-      </view>
-      <view class="stat-cell" style="background: rgba(201, 182, 228, 0.2)">
-        <text class="stat-num">{{ leaveStats.monthCount || 0 }}</text>
-        <text class="stat-label">本月登记</text>
-      </view>
-      <view class="stat-cell" style="background: rgba(127, 181, 232, 0.16)">
-        <text class="stat-num">{{ studentsCount }}</text>
-        <text class="stat-label">班级人数</text>
+      <view class="hero-cat">
+        <CatSitting :width="120" />
       </view>
     </view>
 
-    <view class="section-title"><text>⚡ 快捷入口</text></view>
+    <!-- 三格小统计 -->
+    <view class="mini-grid">
+      <view class="mini-cell">
+        <view class="mini-icon-wrap"><AppIcon name="clock" :size="18" /></view>
+        <text class="mini-num">{{ pendingTodos.length }}</text>
+        <text class="mini-label">待办事项</text>
+      </view>
+      <view class="mini-cell">
+        <view class="mini-icon-wrap"><AppIcon name="moon" :size="18" /></view>
+        <text class="mini-num">{{ leaveStats.activeCount || 0 }}</text>
+        <text class="mini-label">请假中</text>
+      </view>
+      <view class="mini-cell">
+        <view class="mini-icon-wrap"><AppIcon name="users" :size="18" /></view>
+        <text class="mini-num">{{ studentsCount }}</text>
+        <text class="mini-label">班级人数</text>
+      </view>
+    </view>
+
+    <!-- 快捷入口 -->
+    <view class="section-title"><text>你来打理，记录交给喵</text></view>
     <view class="quick-grid">
-      <view class="quick-cell" style="background: rgba(255, 181, 167, 0.2)" @tap="goCreate">
-        <text class="quick-icon">➕</text>
+      <view class="quick-cell" @tap="goCreate">
+        <view class="quick-icon-wrap quick-green"><AppIcon name="plus" :size="20" /></view>
         <text class="quick-label">新建收集任务</text>
+        <text class="quick-desc">收材料 · 发材料</text>
       </view>
-      <view class="quick-cell" style="background: rgba(163, 217, 165, 0.2)" @tap="goLeaveEdit">
-        <text class="quick-icon">📝</text>
+      <view class="quick-cell" @tap="goLeaveEdit">
+        <view class="quick-icon-wrap quick-sage"><AppIcon name="edit" :size="20" /></view>
         <text class="quick-label">登记请假</text>
+        <text class="quick-desc">时长 · 类型 · 原因</text>
       </view>
-      <view class="quick-cell" style="background: rgba(127, 181, 232, 0.16)" @tap="goCheck">
-        <text class="quick-icon">✨</text>
+      <view class="quick-cell" @tap="goCheck">
+        <view class="quick-icon-wrap quick-butter"><AppIcon name="sparkle" :size="20" /></view>
         <text class="quick-label">名单筛查</text>
+        <text class="quick-desc">粘贴名单一键比对</text>
       </view>
-      <view class="quick-cell" style="background: rgba(201, 182, 228, 0.22)" @tap="goAnnouncements">
-        <text class="quick-icon">📣</text>
+      <view class="quick-cell" @tap="goAnnouncements">
+        <view class="quick-icon-wrap quick-peach"><AppIcon name="megaphone" :size="20" /></view>
         <text class="quick-label">群发素材</text>
+        <text class="quick-desc">文案 · 拍照上传</text>
       </view>
     </view>
 
     <view class="tabbar-spacer"></view>
     <TabBar current="index" />
   </view>
-  <!-- #endif -->
 </template>
 
 <script>
 import TabBar from '../../components/TabBar.vue'
 import EmptyState from '../../components/EmptyState.vue'
+import AppIcon from '../../components/AppIcon.vue'
+import ProgressRing from '../../components/ProgressRing.vue'
+import CatSitting from '../../components/cats/CatSitting.vue'
+import CatSleep from '../../components/cats/CatSleep.vue'
+import CatWave from '../../components/cats/CatWave.vue'
 import { useAuthStore } from '../../stores/auth'
 import { collectionTasks, leaveStats, studentsList, todoList } from '../../api'
 import { greeting, todayLabel, isPassed, fmtDateTime } from '../../utils/format'
 
 export default {
-  components: { TabBar, EmptyState },
+  components: { TabBar, EmptyState, AppIcon, ProgressRing, CatSitting, CatSleep, CatWave },
   data() {
     return {
       tasks: [],
@@ -143,6 +157,16 @@ export default {
     /** 未完成待办（服务端已按紧迫度排序），首页卡只展示前 3 条 */
     urgentTodos() {
       return this.pendingTodos.slice(0, 3)
+    },
+    overallTotal() {
+      return this.tasks.reduce((sum, t) => sum + (t.total || 0), 0)
+    },
+    overallReceived() {
+      return this.tasks.reduce((sum, t) => sum + (t.received || 0), 0)
+    },
+    overallPct() {
+      if (!this.overallTotal) return 0
+      return Math.round((this.overallReceived / this.overallTotal) * 100)
     }
   },
   onShow() {
@@ -157,31 +181,11 @@ export default {
       this.guardAndLoad()
     }
   },
-  // #ifdef APP-PLUS
-  /** Android 返回键：优先让网页后退，退无可退再退出应用 */
-  onBackPress() {
-    const page = typeof this.$getAppWebview === 'function' ? this.$getAppWebview() : null
-    const wv = page && page.children ? page.children()[0] : null
-    if (wv) {
-      try {
-        wv.canGoBack((evt) => {
-          if (evt && evt.canBack) {
-            wv.back()
-          } else {
-            plus.runtime.quit()
-          }
-        })
-      } catch (err) {
-        plus.runtime.quit()
-      }
-      return true
-    }
-  },
-  // #endif
   onPullDownRefresh() {
     this.load().finally(() => uni.stopPullDownRefresh())
   },
   methods: {
+    fmtDateTime,
     guardAndLoad() {
       if (this.auth.authRequired && !this.auth.loggedIn) {
         uni.reLaunch({ url: '/pages/login/login' })
@@ -205,11 +209,13 @@ export default {
         /* 拦截器已提示 */
       }
     },
+    dueLabel(t) {
+      if (t.overdue) return `已过期 · ${fmtDateTime(t.dueAt)}`
+      if (t.dueToday) return `今天到期 · ${fmtDateTime(t.dueAt).slice(-5)}`
+      return `截止 ${fmtDateTime(t.dueAt)}`
+    },
     goTodos() {
       uni.navigateTo({ url: '/pages/more/todos' })
-    },
-    openTask(t) {
-      uni.navigateTo({ url: `/pages/collection/detail?id=${t.id}` })
     },
     goCollection() {
       uni.redirectTo({ url: '/pages/collection/list' })
@@ -232,23 +238,19 @@ export default {
 
 <style lang="scss" scoped>
 .page {
-  padding-top: 16rpx;
+  padding-top: 20rpx;
 }
-.greet-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(135deg, #fff 60%, #fdeee0 100%);
-}
+
+/* —— 问候区 —— */
 .greet-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  padding: 10rpx 40rpx 26rpx;
 }
 .greet-hello {
   display: block;
-  font-size: 36rpx;
+  font-size: 42rpx;
   font-weight: 800;
   color: $ink;
 }
@@ -258,109 +260,27 @@ export default {
   color: $ink-light;
   margin-top: 8rpx;
 }
-.greet-emoji {
-  font-size: 56rpx;
-}
-.task-brief-card {
-  padding: 8rpx 28rpx;
-}
-.task-brief {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 22rpx 0;
-  border-bottom: 1rpx solid $line;
-}
-.task-brief:last-child {
-  border-bottom: none;
-}
-.task-brief-left {
-  display: flex;
-  align-items: center;
-  gap: 14rpx;
-  flex: 1;
-  overflow: hidden;
-}
-.task-kind-tag {
-  flex-shrink: 0;
-  width: 44rpx;
-  height: 44rpx;
-  border-radius: 14rpx;
+.greet-bell {
+  position: relative;
+  width: 76rpx;
+  height: 76rpx;
+  border-radius: 50%;
+  background: #fff;
+  border: 1rpx solid $line;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24rpx;
-  font-weight: 700;
-  color: #fff;
+  color: $primary-deep;
 }
-.tag-collect {
-  background: $matcha;
-}
-.tag-distribute {
-  background: $peach;
-}
-.task-name {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: $ink;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.task-progress {
-  flex-shrink: 0;
-  font-size: 25rpx;
-  color: #b07d1e;
-  font-weight: 600;
-}
-.task-progress.complete {
-  color: #4e9b52;
-}
-.stat-grid {
-  display: flex;
-  gap: 18rpx;
-  padding: 26rpx;
-}
-.stat-cell {
-  flex: 1;
-  border-radius: 24rpx;
-  padding: 22rpx 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.stat-num {
-  font-size: 40rpx;
-  font-weight: 800;
-  color: $ink;
-}
-.stat-label {
-  font-size: 23rpx;
-  color: $ink-light;
-  margin-top: 4rpx;
-}
-.quick-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 18rpx;
-  padding: 0 24rpx;
-}
-.quick-cell {
-  width: calc(50% - 9rpx);
-  border-radius: 28rpx;
-  padding: 30rpx 28rpx;
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
-  box-sizing: border-box;
-}
-.quick-icon {
-  font-size: 42rpx;
-}
-.quick-label {
-  font-size: 26rpx;
-  font-weight: 600;
-  color: $ink;
+.bell-dot {
+  position: absolute;
+  top: 14rpx;
+  right: 16rpx;
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: $berry;
+  border: 2rpx solid #fff;
 }
 
 /* —— 待办提醒卡 —— */
@@ -370,32 +290,20 @@ export default {
 .todo-row {
   display: flex;
   align-items: center;
-  gap: 16rpx;
-  padding: 22rpx 0;
+  gap: 18rpx;
+  padding: 20rpx 0;
   border-bottom: 1rpx solid $line;
 }
 .todo-row.last {
   border-bottom: none;
 }
-.todo-badge {
+.todo-cat {
   flex-shrink: 0;
-  font-size: 22rpx;
-  font-weight: 700;
-  padding: 8rpx 18rpx;
-  border-radius: 999rpx;
-  color: #fff;
-}
-.badge-overdue {
-  background: #f49fb6;
-  color: #a02040;
-}
-.badge-today {
-  background: $butter;
-  color: #8a5b00;
-}
-.badge-normal {
-  background: rgba(127, 181, 232, 0.3);
-  color: #4d8ecf;
+  display: flex;
+  align-items: flex-end;
+  width: 72rpx;
+  height: 56rpx;
+  overflow: visible;
 }
 .todo-row-main {
   flex: 1;
@@ -416,6 +324,29 @@ export default {
   color: $ink-light;
   margin-top: 4rpx;
 }
+.todo-due.overdue {
+  color: $berry;
+  font-weight: 600;
+}
+.todo-badge {
+  flex-shrink: 0;
+  font-size: 21rpx;
+  font-weight: 700;
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
+}
+.badge-overdue {
+  background: rgba(201, 111, 94, 0.16);
+  color: #a8503f;
+}
+.badge-today {
+  background: rgba(217, 164, 65, 0.2);
+  color: #a2681f;
+}
+.badge-normal {
+  background: $sage-light;
+  color: $primary-deep;
+}
 .todo-more {
   display: block;
   text-align: center;
@@ -423,5 +354,160 @@ export default {
   color: $primary;
   padding: 16rpx 0 10rpx;
   font-weight: 600;
+}
+
+/* —— 英雄进度卡（鼠尾草底） —— */
+.hero-card {
+  background: $sage-card;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 34rpx 30rpx;
+  overflow: hidden;
+  position: relative;
+}
+.hero-ring {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+.ring-pct {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: $primary-deep;
+}
+.ring-label {
+  font-size: 19rpx;
+  color: $ink-light;
+}
+.hero-right {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+.hero-num {
+  font-size: 40rpx;
+  font-weight: 800;
+  color: $primary-deep;
+}
+.hero-unit {
+  font-size: 22rpx;
+  color: rgba(47, 59, 51, 0.62);
+}
+.hero-btn {
+  margin-top: 14rpx;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  background: $primary;
+  color: #fff;
+  border-radius: 999rpx;
+  padding: 14rpx 26rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+.hero-cat {
+  position: absolute;
+  right: -14rpx;
+  bottom: -20rpx;
+  opacity: 0.9;
+  z-index: 0;
+}
+
+/* —— 三格小统计（白卡+鼠尾草图标底） —— */
+.mini-grid {
+  display: flex;
+  gap: 18rpx;
+  margin: 0 24rpx 24rpx;
+}
+.mini-cell {
+  flex: 1;
+  background: #fff;
+  border: 1rpx solid rgba(232, 226, 212, 0.7);
+  border-radius: 28rpx;
+  padding: 22rpx 0 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.mini-icon-wrap {
+  width: 52rpx;
+  height: 52rpx;
+  border-radius: 18rpx;
+  background: $sage-light;
+  color: $primary-deep;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10rpx;
+}
+.mini-num {
+  font-size: 36rpx;
+  font-weight: 800;
+  color: $ink;
+}
+.mini-label {
+  font-size: 22rpx;
+  color: $ink-light;
+  margin-top: 2rpx;
+}
+
+/* —— 快捷入口 —— */
+.quick-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18rpx;
+  padding: 0 24rpx;
+}
+.quick-cell {
+  width: calc(50% - 9rpx);
+  background: #fff;
+  border: 1rpx solid rgba(232, 226, 212, 0.7);
+  border-radius: 28rpx;
+  padding: 26rpx 26rpx 22rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+.quick-icon-wrap {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 22rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6rpx;
+}
+.quick-green {
+  background: $sage-light;
+  color: $primary-deep;
+}
+.quick-sage {
+  background: rgba(143, 183, 155, 0.24);
+  color: #4e6b58;
+}
+.quick-butter {
+  background: rgba(217, 164, 65, 0.18);
+  color: #a2681f;
+}
+.quick-peach {
+  background: rgba(201, 111, 94, 0.14);
+  color: #b06050;
+}
+.quick-label {
+  font-size: 27rpx;
+  font-weight: 700;
+  color: $ink;
+}
+.quick-desc {
+  font-size: 22rpx;
+  color: $ink-light;
 }
 </style>

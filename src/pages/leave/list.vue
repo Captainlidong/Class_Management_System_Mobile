@@ -52,10 +52,10 @@
       </view>
     </view>
     <view v-else class="card">
-      <EmptyState icon="🌙" text="暂无请假记录" />
+      <EmptyState text="暂无请假记录" />
     </view>
 
-    <view class="fab" @tap="goEdit">➕</view>
+    <view class="fab" @tap="goEdit"><AppIcon name="plus" :size="30" /></view>
     <view class="tabbar-spacer"></view>
     <TabBar current="leave" />
   </view>
@@ -63,6 +63,7 @@
 
 <script>
 import TabBar from '../../components/TabBar.vue'
+import AppIcon from '../../components/AppIcon.vue'
 import EmptyState from '../../components/EmptyState.vue'
 import { leaveList, leaveClose, leaveReopen, leaveDelete } from '../../api'
 import { fmtDateTime } from '../../utils/format'
@@ -70,7 +71,7 @@ import { fmtDateTime } from '../../utils/format'
 const TYPE_MAP = { sick: '病假', personal: '事假', official: '公假', other: '其他' }
 
 export default {
-  components: { TabBar, EmptyState },
+  components: { TabBar, EmptyState, AppIcon },
   data() {
     return {
       status: '',
@@ -136,7 +137,7 @@ export default {
       uni.showModal({
         title: '删除记录',
         content: `删除 ${l.name} 的请假记录？不可恢复。`,
-        confirmColor: '#e06c75',
+        confirmColor: '#C96F5E',
         success: async (res) => {
           if (!res.confirm) return
           try {
@@ -191,7 +192,7 @@ export default {
   display: block;
   font-size: 25rpx;
   color: $ink;
-  background: #faf5ee;
+  background: #F6F1E6;
   border-radius: 16rpx;
   padding: 14rpx 20rpx;
   margin-top: 14rpx;
@@ -204,7 +205,7 @@ export default {
 }
 .leave-action {
   font-size: 25rpx;
-  color: #4d8ecf;
+  color: #3E5C4B;
   font-weight: 600;
 }
 .leave-action.danger {
@@ -223,7 +224,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10rpx 30rpx rgba(127, 181, 232, 0.45);
+  box-shadow: 0 10rpx 30rpx rgba(62, 92, 75, 0.1);
   z-index: 900;
 }
 </style>

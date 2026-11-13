@@ -13,9 +13,9 @@
         </view>
         <text v-if="b.remark" class="batch-remark">{{ b.remark }}</text>
         <view class="batch-meta">
-          <text class="batch-meta-item">🏆 获奖人数 {{ b.awardCount }}</text>
+          <text class="batch-meta-item">获奖人数 {{ b.awardCount }}</text>
           <text class="batch-meta-item" :class="{ complete: b.receivedCount >= b.awardCount && b.awardCount > 0 }">
-            📋 已交表 {{ b.receivedCount }} / {{ b.awardCount }}
+            已交表 {{ b.receivedCount }} / {{ b.awardCount }}
           </text>
         </view>
         <view v-if="b.levels && b.levels.length" class="level-tags">
@@ -25,7 +25,7 @@
       </view>
     </view>
     <view v-else class="card">
-      <EmptyState icon="🏆" text="还没有奖学金批次" />
+      <EmptyState text="还没有奖学金批次" />
     </view>
 
     <view class="tabbar-spacer"></view>
@@ -100,7 +100,7 @@ export default {
 }
 .batch-meta-item {
   font-size: 25rpx;
-  color: #b07d1e;
+  color: #A2681F;
   font-weight: 600;
 }
 .batch-meta-item.complete {
@@ -114,8 +114,8 @@ export default {
 }
 .level-tag {
   font-size: 22rpx;
-  color: #8d7bc0;
-  background: rgba(201, 182, 228, 0.22);
+  color: #5B7A62;
+  background: rgba(220, 232, 220, 0.6);
   border-radius: 999rpx;
   padding: 6rpx 18rpx;
 }

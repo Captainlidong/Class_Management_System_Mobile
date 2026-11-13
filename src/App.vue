@@ -16,7 +16,7 @@ export default {
 </script>
 
 <style lang="scss">
-/* 全局样式：App.vue 的 style 在 uni-app 里是全局生效的 */
+/* 全局样式：App.vue 的 style 在 uni-app 里是全局生效的 —— 喵班 · 奶油治愈系 */
 @import './styles/theme.scss';
 
 page {
@@ -27,40 +27,41 @@ page {
     'Microsoft YaHei', sans-serif;
 }
 
-/* —— 通用卡片 —— */
+/* —— 通用卡片：白底大圆角，阴影极轻（参考图扁平风） —— */
 .card {
   background: $card-bg;
   border-radius: $radius-card;
   padding: 28rpx;
   margin: 0 24rpx 24rpx;
-  box-shadow: 0 6rpx 24rpx rgba(122, 96, 76, 0.06);
+  border: 1rpx solid rgba(232, 226, 212, 0.7);
+  box-shadow: 0 4rpx 18rpx rgba(122, 96, 76, 0.05);
 }
 
-/* —— 通用按钮 —— */
+/* —— 胶囊按钮（深绿底白字，参考图样式） —— */
 .btn {
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: $radius-btn;
-  padding: 22rpx 0;
+  padding: 24rpx 0;
   font-size: 30rpx;
-  font-weight: 600;
+  font-weight: 700;
   transition: opacity 0.15s ease;
 }
 .btn:active {
-  opacity: 0.75;
+  opacity: 0.8;
 }
 .btn-primary {
   background: $primary;
   color: #fff;
 }
 .btn-ghost {
-  background: rgba(127, 181, 232, 0.14);
-  color: #4d8ecf;
+  background: $primary-soft;
+  color: $primary-deep;
 }
 .btn-danger-ghost {
-  background: rgba(244, 159, 182, 0.16);
-  color: #d97794;
+  background: rgba(201, 111, 94, 0.14);
+  color: $berry;
 }
 .btn[disabled] {
   opacity: 0.45;
@@ -76,29 +77,21 @@ page {
   font-weight: 600;
 }
 .pill-done {
-  background: rgba(163, 217, 165, 0.22);
-  color: #4e9b52;
+  background: $sage-light;
+  color: $primary-deep;
 }
 .pill-undone {
-  background: rgba(255, 217, 142, 0.3);
-  color: #b07d1e;
+  background: rgba(217, 164, 65, 0.18);
+  color: #a2681f;
 }
 
-/* —— 通用输入 —— */
+/* —— 通用输入：奶油内衬 —— */
 .field-input {
-  background: #faf5ee;
+  background: #fbf7ee;
   border-radius: 20rpx;
   padding: 20rpx 24rpx;
   font-size: 28rpx;
   color: $ink;
-}
-
-/* —— 空态 —— */
-.empty {
-  padding: 100rpx 40rpx;
-  text-align: center;
-  color: $ink-light;
-  font-size: 26rpx;
 }
 
 /* —— 底部安全区占位（配合自绘 TabBar） —— */

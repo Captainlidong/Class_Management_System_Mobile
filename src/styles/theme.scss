@@ -1,4 +1,4 @@
-/* 主题公共样式（被 App.vue @import，全局可用）—— 变量在 uni.scss */
+/* 全局公共样式（App.vue @import）—— 喵班 · 奶油治愈系 */
 
 .section-title {
   font-size: 30rpx;
@@ -11,7 +11,7 @@
 }
 .section-more {
   font-size: 24rpx;
-  font-weight: 500;
+  font-weight: 600;
   color: $primary;
 }
 
@@ -22,7 +22,7 @@
   border-radius: 999rpx;
   font-size: 25rpx;
   color: $ink-light;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.9);
   border: 1rpx solid $line;
   margin-right: 16rpx;
 }

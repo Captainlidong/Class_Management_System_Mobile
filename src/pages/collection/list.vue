@@ -14,7 +14,7 @@
       >
         <view class="task-head">
           <text class="task-kind-tag" :class="t.kind === 'distribute' ? 'tag-distribute' : 'tag-collect'">
-            {{ t.kind === 'distribute' ? '📤 分发' : '📥 收集' }}
+            {{ t.kind === 'distribute' ? '分发' : '收集' }}
           </text>
           <text class="task-name">{{ t.name }}</text>
         </view>
@@ -23,7 +23,7 @@
           <view class="progress-bar">
             <view
               class="progress-inner"
-              :style="{ width: progressPct(t) + '%', background: t.received >= t.total && t.total > 0 ? '#A3D9A5' : '#7FB5E8' }"
+              :style="{ width: progressPct(t) + '%', background: t.received >= t.total && t.total > 0 ? '#8FB79B' : '#3E5C4B' }"
             ></view>
           </view>
           <text class="task-progress-text" :class="{ complete: t.received >= t.total && t.total > 0 }">
@@ -32,14 +32,14 @@
         </view>
         <view class="task-meta-row">
           <text v-if="t.deadline" class="task-deadline" :class="{ passed: isPassed(t.deadline) }">
-            📅 截止 {{ fmtDate(t.deadline) }}{{ isPassed(t.deadline) ? '（已过期）' : '' }}
+            截止 {{ fmtDate(t.deadline) }}{{ isPassed(t.deadline) ? '（已过期）' : '' }}
           </text>
           <text class="task-created">{{ fmtDate(t.createdAt) }}</text>
         </view>
       </view>
     </view>
     <view v-else class="card">
-      <EmptyState icon="📋" text="还没有任务，点右上角新建一个吧" />
+      <EmptyState text="还没有任务，点右上角新建一个吧" />
     </view>
 
     <view class="tabbar-spacer"></view>
@@ -152,7 +152,7 @@ export default {
 .task-progress-text {
   flex-shrink: 0;
   font-size: 25rpx;
-  color: #b07d1e;
+  color: #A2681F;
   font-weight: 600;
 }
 .task-progress-text.complete {
@@ -168,7 +168,7 @@ export default {
   color: $ink-light;
 }
 .task-deadline.passed {
-  color: #e06c75;
+  color: #C96F5E;
   font-weight: 600;
 }
 .task-created {

@@ -4,12 +4,12 @@
       <text class="form-label">任务类型</text>
       <view class="kind-row">
         <view class="kind-cell" :class="{ active: form.kind === 'collect' }" @tap="form.kind = 'collect'">
-          <text class="kind-icon">📥</text>
+          <view class="kind-icon"><AppIcon name="clipboard" :size="26" /></view>
           <text class="kind-name">收集材料</text>
           <text class="kind-desc">培养计划、问卷、表格</text>
         </view>
         <view class="kind-cell" :class="{ active: form.kind === 'distribute' }" @tap="form.kind = 'distribute'">
-          <text class="kind-icon">📤</text>
+          <view class="kind-icon"><AppIcon name="send" :size="26" /></view>
           <text class="kind-name">分发材料</text>
           <text class="kind-desc">通知附件、盖章资料</text>
         </view>
@@ -62,8 +62,10 @@
 
 <script>
 import { studentsList, collectionCreate } from '../../api'
+import AppIcon from '../../components/AppIcon.vue'
 
 export default {
+  components: { AppIcon },
   data() {
     return {
       form: { kind: 'collect', name: '', deadline: '', remark: '', studentIds: [] },
@@ -165,10 +167,12 @@ export default {
 }
 .kind-cell.active {
   border-color: $primary;
-  background: rgba(127, 181, 232, 0.1);
+  background: rgba(62, 92, 75, 0.1);
 }
 .kind-icon {
-  font-size: 40rpx;
+  color: #3E5C4B;
+  display: flex;
+  justify-content: center;
 }
 .kind-name {
   font-size: 28rpx;
@@ -186,7 +190,7 @@ export default {
   justify-content: space-between;
 }
 .placeholder {
-  color: #b8b0c0;
+  color: #B0B4AC;
 }
 .picker-clear {
   color: $ink-light;
@@ -211,7 +215,7 @@ export default {
 }
 .range-link {
   font-size: 25rpx;
-  color: #4d8ecf;
+  color: #3E5C4B;
   font-weight: 600;
 }
 .range-hint {
@@ -243,7 +247,7 @@ export default {
   width: 40rpx;
   height: 40rpx;
   border-radius: 50%;
-  border: 2rpx solid #e0d6c8;
+  border: 2rpx solid #E8E2D4;
   color: #fff;
   font-size: 24rpx;
   display: flex;

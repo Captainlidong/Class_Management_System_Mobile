@@ -4,28 +4,28 @@
     <view class="card head-card" v-if="task">
       <view class="task-head">
         <text class="task-kind-tag" :class="kt.kind === 'distribute' ? 'tag-distribute' : 'tag-collect'">
-          {{ task.kind === 'distribute' ? '📤 分发' : '📥 收集' }}
+          {{ task.kind === 'distribute' ? '分发' : '收集' }}
         </text>
         <text class="task-name">{{ task.name }}</text>
       </view>
       <text v-if="task.deadline" class="task-deadline" :class="{ passed: isPassed(task.deadline) }">
-        📅 截止 {{ fmtDateTime(task.deadline) }}{{ isPassed(task.deadline) ? '（已过期）' : '' }}
+        截止 {{ fmtDateTime(task.deadline) }}{{ isPassed(task.deadline) ? '（已过期）' : '' }}
       </text>
       <view class="stat-row">
-        <view class="stat-cell" style="background: rgba(201, 182, 228, 0.18)">
+        <view class="stat-cell" style="background: rgba(220, 232, 220, 0.6)">
           <text class="stat-num">{{ entries.length }}</text>
           <text class="stat-label">{{ kt.statTotal }}</text>
         </view>
-        <view class="stat-cell" style="background: rgba(163, 217, 165, 0.2)">
+        <view class="stat-cell" style="background: rgba(220, 232, 220, 0.65)">
           <text class="stat-num">{{ receivedCount }}</text>
           <text class="stat-label">{{ kt.done }}</text>
         </view>
-        <view class="stat-cell" style="background: rgba(255, 217, 142, 0.24)">
+        <view class="stat-cell" style="background: rgba(217, 164, 65, 0.16)">
           <text class="stat-num">{{ entries.length - receivedCount }}</text>
           <text class="stat-label">{{ kt.undone }}</text>
         </view>
         <view class="ring-wrap">
-          <ProgressRing :size="140" :pct="progress" color="#7FB5E8">
+          <ProgressRing :size="140" :pct="progress" color="#3E5C4B">
             <text class="ring-pct">{{ progress }}%</text>
             <text class="ring-sub">{{ kt.done }} {{ receivedCount }}/{{ entries.length }}</text>
           </ProgressRing>
@@ -78,16 +78,16 @@
       </view>
     </view>
     <view v-else class="card">
-      <EmptyState icon="👀" :text="entries.length ? '没有符合筛选的同学' : '任务名单为空'" />
+      <EmptyState :text="entries.length ? '没有符合筛选的同学' : '任务名单为空'" />
     </view>
 
     <view style="height: 150rpx"></view>
 
     <!-- 底部操作栏 -->
     <view class="action-bar" v-if="task">
-      <view class="action-btn primary" @tap="copyUndone">📋 {{ kt.copyBtn }}</view>
-      <view class="action-btn ghost" @tap="overlay = 'remove'">🗑️ 批量移除</view>
-      <view class="action-btn ghost" @tap="showMore">⋯ 更多</view>
+      <view class="action-btn primary" @tap="copyUndone"><AppIcon name="clipboard" :size="18" style="margin-right: 8rpx" />{{ kt.copyBtn }}</view>
+      <view class="action-btn ghost" @tap="overlay = 'remove'"><AppIcon name="trash" :size="18" style="margin-right: 8rpx" />批量移除</view>
+      <view class="action-btn ghost" @tap="showMore"><AppIcon name="grid" :size="18" style="margin-right: 8rpx" />更多</view>
     </view>
 
     <!-- 遮罩弹层：批量移除 -->
@@ -132,7 +132,7 @@
             <view class="check-circle" :class="{ on: addIds.includes(s.id) }">✓</view>
             <text class="popup-row-name">{{ s.name }}（{{ s.studentNo || '无学号' }}）</text>
           </view>
-          <view v-if="!availableStudents.length" class="empty">全班都在名单里啦 🎉</view>
+          <view v-if="!availableStudents.length" class="empty">全班都在名单里啦</view>
         </scroll-view>
         <button class="btn btn-primary popup-btn" :disabled="!addIds.length" @tap="saveAddPersons">添加所选</button>
       </view>
@@ -142,13 +142,14 @@
 
 <script>
 import ProgressRing from '../../components/ProgressRing.vue'
+import AppIcon from '../../components/AppIcon.vue'
 import EmptyState from '../../components/EmptyState.vue'
 import { collectionTask, collectionUpdateEntry, collectionMarkAll, collectionBatchRemove, collectionRemoveStudent, collectionAddStudents, collectionDelete, studentsList } from '../../api'
 import { downloadByUrl } from '../../api/request'
 import { kindText, fmtDateTime, isPassed } from '../../utils/format'
 
 export default {
-  components: { ProgressRing, EmptyState },
+  components: { ProgressRing, EmptyState, AppIcon },
   data() {
     return {
       taskId: null,
@@ -304,7 +305,7 @@ export default {
     showMore() {
       const kt = this.kt
       uni.showActionSheet({
-        itemList: ['➕ 添加人员', `📤 导出全部`, `📤 导出${kt.undone}`, '🗑️ 删除任务'],
+        itemList: ['添加人员', '导出全部', `导出${kt.undone}`, '删除任务'],
         success: (res) => {
           if (res.tapIndex === 0) {
             this.openAdd()
@@ -322,7 +323,7 @@ export default {
       uni.showModal({
         title: '删除任务',
         content: `删除任务「${this.task.name}」？名单和标记记录会一起删除，不可恢复。`,
-        confirmColor: '#e06c75',
+        confirmColor: '#C96F5E',
         success: async (res) => {
           if (!res.confirm) return
           try {
@@ -367,7 +368,7 @@ export default {
       uni.showModal({
         title: '批量移除',
         content: `将从任务中移除 ${names.length} 人：${names.slice(0, 6).join('、')}${names.length > 6 ? ' 等' : ''}？记录会一并删除，不可恢复。`,
-        confirmColor: '#e06c75',
+        confirmColor: '#C96F5E',
         success: async (res) => {
           if (!res.confirm) return
           try {
@@ -440,7 +441,7 @@ export default {
   margin-bottom: 20rpx;
 }
 .task-deadline.passed {
-  color: #e06c75;
+  color: #C96F5E;
   font-weight: 600;
 }
 .stat-row {
@@ -475,7 +476,7 @@ export default {
 .ring-pct {
   font-size: 30rpx;
   font-weight: 800;
-  color: #4d8ecf;
+  color: #3E5C4B;
 }
 .ring-sub {
   font-size: 20rpx;
@@ -507,7 +508,7 @@ export default {
   width: 76rpx;
   height: 42rpx;
   border-radius: 999rpx;
-  background: #e8e0d6;
+  background: #E8E2D4;
   position: relative;
   transition: background 0.2s ease;
   flex-shrink: 0;
@@ -618,11 +619,14 @@ export default {
   flex: 1.4;
   background: $primary;
   color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .action-btn.ghost {
   flex: 1;
   background: rgba(255, 255, 255, 0.95);
-  color: #4d8ecf;
+  color: #3E5C4B;
 }
 
 .overlay {
@@ -661,7 +665,7 @@ export default {
 }
 .popup-tool-link {
   font-size: 25rpx;
-  color: #4d8ecf;
+  color: #3E5C4B;
   font-weight: 600;
 }
 .popup-count {
@@ -693,13 +697,13 @@ export default {
   color: #4e9b52;
 }
 .st-undone {
-  color: #b07d1e;
+  color: #A2681F;
 }
 .check-circle {
   width: 40rpx;
   height: 40rpx;
   border-radius: 50%;
-  border: 2rpx solid #e0d6c8;
+  border: 2rpx solid #E8E2D4;
   color: #fff;
   font-size: 24rpx;
   display: flex;

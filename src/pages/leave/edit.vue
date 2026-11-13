@@ -12,7 +12,7 @@
         </picker>
       </template>
       <template v-else>
-        <view class="edit-banner">📝 正在编辑 {{ form.name }} 的请假记录</view>
+        <view class="edit-banner">正在编辑 {{ form.name }} 的请假记录</view>
       </template>
 
       <text class="form-label">请假类型</text>
@@ -199,7 +199,7 @@ export default {
             approver: this.form.approver,
             remark: this.form.remark
           })
-          uni.showToast({ title: `已为 ${s.name} 登记请假 🌙`, icon: 'none' })
+          uni.showToast({ title: `已为 ${s.name} 登记请假`, icon: 'none' })
         }
         setTimeout(() => uni.navigateBack(), 700)
       } catch (e) {
@@ -244,11 +244,11 @@ export default {
   width: auto;
 }
 .edit-banner {
-  background: rgba(127, 181, 232, 0.12);
+  background: rgba(62, 92, 75, 0.1);
   border-radius: 18rpx;
   padding: 18rpx 22rpx;
   font-size: 26rpx;
-  color: #4d8ecf;
+  color: #3E5C4B;
   font-weight: 600;
   margin-top: 6rpx;
 }
@@ -257,6 +257,6 @@ export default {
   width: auto;
 }
 .placeholder {
-  color: #b8b0c0;
+  color: #B0B4AC;
 }
 </style>

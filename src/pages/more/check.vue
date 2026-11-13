@@ -14,31 +14,31 @@
         <text class="save-label">保存为历史记录</text>
       </view>
       <button class="btn btn-primary run-btn" :disabled="running || !text.trim()" @tap="run">
-        {{ running ? '筛查中…' : '🔍 一键筛查' }}
+        {{ running ? '筛查中…' : '一键筛查' }}
       </button>
     </view>
 
     <view v-if="result">
       <view class="card result-card">
-        <view class="result-group" style="background: rgba(163, 217, 165, 0.18)">
+        <view class="result-group" style="background: rgba(220, 232, 220, 0.65)">
           <text class="result-title">✔ 已参与 {{ result.participated.length }}</text>
           <view class="result-names">
             <text v-for="n in result.participated" :key="'p' + n" class="result-name done">{{ n }}</text>
           </view>
         </view>
-        <view class="result-group" style="background: rgba(255, 217, 142, 0.24)">
+        <view class="result-group" style="background: rgba(217, 164, 65, 0.16)">
           <text class="result-title">✖ 未参与 {{ result.absent.length }}</text>
           <view class="result-names">
             <text v-for="n in result.absent" :key="'a' + n" class="result-name undone">{{ n }}</text>
           </view>
         </view>
-        <view v-if="result.invalid && result.invalid.length" class="result-group" style="background: rgba(244, 159, 182, 0.16)">
+        <view v-if="result.invalid && result.invalid.length" class="result-group" style="background: rgba(201, 111, 94, 0.14)">
           <text class="result-title">⚠ 无效名单 {{ result.invalid.length }}</text>
           <view class="result-names">
             <text v-for="n in result.invalid" :key="'i' + n" class="result-name invalid">{{ n }}</text>
           </view>
         </view>
-        <view v-if="result.duplicates && result.duplicates.length" class="result-group" style="background: rgba(201, 182, 228, 0.18)">
+        <view v-if="result.duplicates && result.duplicates.length" class="result-group" style="background: rgba(220, 232, 220, 0.6)">
           <text class="result-title">🔁 重复 {{ result.duplicates.length }}</text>
           <view class="result-names">
             <text v-for="n in result.duplicates" :key="'d' + n" class="result-name dup">{{ n }}</text>
@@ -106,7 +106,7 @@ export default {
   width: 40rpx;
   height: 40rpx;
   border-radius: 50%;
-  border: 2rpx solid #e0d6c8;
+  border: 2rpx solid #E8E2D4;
   color: #fff;
   font-size: 24rpx;
   display: flex;
@@ -155,7 +155,7 @@ export default {
   color: #4e9b52;
 }
 .result-name.undone {
-  color: #b07d1e;
+  color: #A2681F;
 }
 .result-name.invalid,
 .result-name.dup {

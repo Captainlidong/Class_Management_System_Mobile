@@ -1,9 +1,14 @@
 <template>
   <view class="login-page">
     <view class="login-hero">
-      <text class="hero-emoji">🎀</text>
-      <text class="hero-title">班级管理助手</text>
-      <text class="hero-sub">班长专属 · 移动端</text>
+      <view class="bubble-wrap">
+        <SpeechBubble :text="bubbleText" />
+      </view>
+      <view class="cat-stage">
+        <CatSitting :width="330" :backdrop="true" />
+      </view>
+      <text class="hero-title">喵班</text>
+      <text class="hero-sub">喵陪班 · 替你打理班级大小事</text>
     </view>
 
     <view class="login-card">
@@ -31,7 +36,7 @@
       </view>
 
       <button class="btn btn-primary login-btn" :disabled="submitting" @tap="submit">
-        {{ submitting ? '登录中…' : '登 录' }}
+        {{ submitting ? '登录中…' : '开启我的喵班 →' }}
       </button>
       <text class="login-hint">与会话桌面版共用登录，7 天内免重复登录</text>
     </view>
@@ -41,8 +46,13 @@
 <script>
 import { useAuthStore } from '../../stores/auth'
 import { authCaptcha } from '../../api'
+import CatSitting from '../../components/cats/CatSitting.vue'
+import SpeechBubble from '../../components/cats/SpeechBubble.vue'
+
+const BUBBLES = ['今天也要好好生活', '班级的事，交给我喵', '今天也要加油喵']
 
 export default {
+  components: { CatSitting, SpeechBubble },
   data() {
     return {
       username: '',
@@ -50,7 +60,8 @@ export default {
       captchaCode: '',
       captchaId: '',
       captchaImage: '',
-      submitting: false
+      submitting: false,
+      bubbleText: BUBBLES[Math.floor(Math.random() * BUBBLES.length)]
     }
   },
   computed: {
@@ -115,34 +126,42 @@ export default {
 <style lang="scss" scoped>
 .login-page {
   min-height: 100vh;
-  background: linear-gradient(180deg, #fdeee0 0%, #fdf8f2 42%);
+  background: $cream-bg;
   padding: 0 48rpx;
 }
 .login-hero {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 140rpx 0 60rpx;
+  padding: 90rpx 0 30rpx;
 }
-.hero-emoji {
-  font-size: 96rpx;
+.bubble-wrap {
+  margin-bottom: -6rpx;
+  z-index: 2;
+}
+.cat-stage {
+  display: flex;
+  justify-content: center;
 }
 .hero-title {
-  font-size: 44rpx;
+  font-size: 56rpx;
   font-weight: 800;
   color: $ink;
-  margin-top: 16rpx;
+  margin-top: 10rpx;
+  letter-spacing: 4rpx;
 }
 .hero-sub {
   font-size: 25rpx;
   color: $ink-light;
-  margin-top: 8rpx;
+  margin-top: 10rpx;
 }
 .login-card {
   background: #fff;
   border-radius: 40rpx;
   padding: 44rpx 36rpx;
-  box-shadow: 0 14rpx 50rpx rgba(122, 96, 76, 0.1);
+  border: 1rpx solid rgba(232, 226, 212, 0.7);
+  box-shadow: 0 14rpx 50rpx rgba(122, 96, 76, 0.08);
+  margin-top: 36rpx;
 }
 .field {
   margin-bottom: 30rpx;
@@ -166,7 +185,7 @@ export default {
   width: 220rpx;
   height: 72rpx;
   border-radius: 16rpx;
-  background: #fcf2f6;
+  background: #fbf7ee;
   flex-shrink: 0;
 }
 .captcha-loading {

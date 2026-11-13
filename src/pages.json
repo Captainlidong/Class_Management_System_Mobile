@@ -3,7 +3,7 @@
     {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "班级管理助手",
+        "navigationBarTitleText": "喵班",
         "h5": {
           "navigationStyle": "custom"
         }
@@ -68,8 +68,8 @@
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "班级管理助手",
-    "navigationBarBackgroundColor": "#FDF8F2",
-    "backgroundColor": "#FDF8F2"
+    "navigationBarTitleText": "喵班",
+    "navigationBarBackgroundColor": "#F7F2E7",
+    "backgroundColor": "#F7F2E7"
   }
 }

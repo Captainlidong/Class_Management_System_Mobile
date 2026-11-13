@@ -20,13 +20,13 @@
         </view>
 
         <view v-if="expandedId === r.id" class="record-body">
-          <view class="result-group" style="background: rgba(163, 217, 165, 0.18)">
+          <view class="result-group" style="background: rgba(220, 232, 220, 0.65)">
             <text class="result-title">✔ 已参与 {{ detail.participated.length }}</text>
             <view class="result-names">
               <text v-for="n in detail.participated" :key="'p' + n" class="result-name done">{{ n }}</text>
             </view>
           </view>
-          <view class="result-group" style="background: rgba(255, 217, 142, 0.24)">
+          <view class="result-group" style="background: rgba(217, 164, 65, 0.16)">
             <text class="result-title">✖ 未参与 {{ detail.absent.length }}</text>
             <view class="result-names">
               <text v-for="n in detail.absent" :key="'a' + n" class="result-name undone">{{ n }}</text>
@@ -39,7 +39,7 @@
       </view>
     </view>
     <view v-else class="card">
-      <EmptyState icon="📖" text="暂无筛查历史" />
+      <EmptyState text="暂无筛查历史" />
     </view>
   </view>
 </template>
@@ -97,7 +97,7 @@ export default {
       uni.showModal({
         title: '删除记录',
         content: `删除「${r.title}」？不可恢复。`,
-        confirmColor: '#e06c75',
+        confirmColor: '#C96F5E',
         success: async (res) => {
           if (!res.confirm) return
           try {
@@ -182,7 +182,7 @@ export default {
   color: #4e9b52;
 }
 .result-name.undone {
-  color: #b07d1e;
+  color: #A2681F;
 }
 .record-actions {
   display: flex;

@@ -1,9 +1,9 @@
 {
-    "name" : "班级管理助手",
+    "name" : "喵班",
     "appid" : "__UNI__CD0D162",
     "description" : "班级成员管理系统移动端",
-    "versionName" : "1.0.2",
-    "versionCode" : "102",
+    "versionName" : "1.1.0",
+    "versionCode" : "103",
     "vueVersion" : "3",
     "locale" : "zh-Hans",
     "h5" : {

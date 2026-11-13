@@ -1,14 +1,17 @@
 <script>
-/** 自绘底部导航（奶油马卡龙风）：5 个主页面各自引入，redirectTo 切换避免页面栈膨胀 */
+/** 自绘底部导航（喵班 · 奶油绿）：线性图标 + 选中态鼠尾草胶囊 */
+import AppIcon from './AppIcon.vue'
+
 const TABS = [
-  { key: 'index', icon: '🏡', label: '首页', url: '/pages/index/index' },
-  { key: 'collection', icon: '📋', label: '收集', url: '/pages/collection/list' },
-  { key: 'leave', icon: '🌙', label: '请假', url: '/pages/leave/list' },
-  { key: 'scholarship', icon: '🏆', label: '奖学金', url: '/pages/scholarship/list' },
-  { key: 'more', icon: '✨', label: '更多', url: '/pages/more/more' }
+  { key: 'index', icon: 'home', label: '首页', url: '/pages/index/index' },
+  { key: 'collection', icon: 'clipboard', label: '收集', url: '/pages/collection/list' },
+  { key: 'leave', icon: 'moon', label: '请假', url: '/pages/leave/list' },
+  { key: 'scholarship', icon: 'trophy', label: '奖学金', url: '/pages/scholarship/list' },
+  { key: 'more', icon: 'grid', label: '更多', url: '/pages/more/more' }
 ]
 
 export default {
+  components: { AppIcon },
   props: {
     current: { type: String, required: true }
   },
@@ -33,7 +36,9 @@ export default {
       :class="{ active: t.key === current }"
       @tap="switchTab(t)"
     >
-      <text class="tab-icon">{{ t.icon }}</text>
+      <view class="tab-icon-wrap">
+        <AppIcon :name="t.icon" :size="24" :stroke-width="1.7" />
+      </view>
       <text class="tab-label">{{ t.label }}</text>
     </view>
   </view>
@@ -46,12 +51,13 @@ export default {
   right: 20rpx;
   bottom: calc(16rpx + env(safe-area-inset-bottom));
   display: flex;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-radius: 36rpx;
-  padding: 14rpx 10rpx;
-  box-shadow: 0 10rpx 40rpx rgba(122, 96, 76, 0.14);
+  border: 1rpx solid rgba(232, 226, 212, 0.8);
+  border-radius: 40rpx;
+  padding: 12rpx 10rpx;
+  box-shadow: 0 10rpx 40rpx rgba(122, 96, 76, 0.12);
   z-index: 999;
 }
 .tab-item {
@@ -60,24 +66,27 @@ export default {
   flex-direction: column;
   align-items: center;
   gap: 2rpx;
-  padding: 8rpx 0;
-  border-radius: 24rpx;
-  transition: background 0.2s ease;
+  padding: 10rpx 0 8rpx;
+  border-radius: 28rpx;
+  color: $ink-light;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 .tab-item.active {
-  background: rgba(127, 181, 232, 0.16);
+  background: $sage-light;
+  color: $primary-deep;
 }
-.tab-icon {
-  font-size: 38rpx;
-  line-height: 1.1;
+.tab-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40rpx;
 }
 .tab-label {
   font-size: 21rpx;
-  color: $ink-light;
   font-weight: 500;
 }
 .tab-item.active .tab-label {
-  color: #4d8ecf;
+  color: $primary-deep;
   font-weight: 700;
 }
 </style>
