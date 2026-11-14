@@ -1,4 +1,9 @@
 <template>
+  <!-- #ifdef APP-PLUS -->
+  <!-- APK 壳方案：App 端直接全屏加载线上 H5（Cookie 同源、更新即时生效） -->
+  <web-view :src="appUrl"></web-view>
+  <!-- #endif -->
+  <!-- #ifndef APP-PLUS -->
   <view class="page">
     <!-- 问候区 -->
     <view class="greet-row">
@@ -117,6 +122,7 @@
     <view class="tabbar-spacer"></view>
     <TabBar current="index" />
   </view>
+  <!-- #endif -->
 </template>
 
 <script>
