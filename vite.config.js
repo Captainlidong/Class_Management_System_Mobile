@@ -19,5 +19,19 @@ export default defineConfig({
         }
       }
     }
+  },
+  // 本地验证构建产物：npm run build:h5 后 vite preview（同源代理 /api）
+  preview: {
+    host: '127.0.0.1',
+    port: 5199,
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:8080',
+        changeOrigin: true,
+        headers: {
+          Origin: 'http://127.0.0.1:8080'
+        }
+      }
+    }
   }
 })

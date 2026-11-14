@@ -1,5 +1,5 @@
 <template>
-  <view class="login-page">
+  <view class="login-page" :class="{ fading }">
     <view class="login-hero">
       <view class="bubble-wrap">
         <SpeechBubble :text="bubbleText" />
@@ -35,8 +35,13 @@
         </view>
       </view>
 
-      <button class="btn btn-primary login-btn" :disabled="submitting" @tap="submit">
-        {{ submitting ? '登录中…' : '开启我的喵班 →' }}
+      <button
+        class="btn btn-primary login-btn"
+        :class="{ 'btn-success': btnState === 'success', pulsing: btnState === 'submitting' }"
+        :disabled="btnState !== 'idle'"
+        @tap="submit"
+      >
+        {{ btnText }}
       </button>
       <text class="login-hint">与会话桌面版共用登录，7 天内免重复登录</text>
     </view>
@@ -60,13 +65,19 @@ export default {
       captchaCode: '',
       captchaId: '',
       captchaImage: '',
-      submitting: false,
+      btnState: 'idle', // idle | submitting | success
+      fading: false,
       bubbleText: BUBBLES[Math.floor(Math.random() * BUBBLES.length)]
     }
   },
   computed: {
     auth() {
       return useAuthStore()
+    },
+    btnText() {
+      if (this.btnState === 'submitting') return '喵…正在验证身份'
+      if (this.btnState === 'success') return '✓ 喵！欢迎回来'
+      return '开启我的喵班 →'
     }
   },
   onLoad() {
@@ -98,12 +109,12 @@ export default {
       }
     },
     async submit() {
-      if (this.submitting) return
+      if (this.btnState !== 'idle') return
       if (!this.username.trim() || !this.password || !this.captchaCode.trim()) {
         uni.showToast({ title: '请填写账号、密码和验证码', icon: 'none' })
         return
       }
-      this.submitting = true
+      this.btnState = 'submitting'
       try {
         await this.auth.login({
           username: this.username.trim(),
@@ -111,12 +122,20 @@ export default {
           captchaId: this.captchaId,
           captchaCode: this.captchaCode.trim()
         })
-        uni.reLaunch({ url: '/pages/index/index' })
+        // 成功反馈 → 写欢迎标志 → 登录页淡出 → 进入首页（首页显示欢迎过场）
+        this.btnState = 'success'
+        uni.setStorageSync(
+          'miaoban_welcome',
+          JSON.stringify({ name: this.username.trim(), ts: Date.now() })
+        )
+        setTimeout(() => {
+          this.fading = true
+          setTimeout(() => uni.reLaunch({ url: '/pages/index/index' }), 240)
+        }, 460)
       } catch (e) {
         // 验证码是一次性的，失败换一张
+        this.btnState = 'idle'
         this.loadCaptcha()
-      } finally {
-        this.submitting = false
       }
     }
   }
@@ -128,6 +147,10 @@ export default {
   min-height: 100vh;
   background: $cream-bg;
   padding: 0 48rpx;
+  transition: opacity 0.22s ease;
+}
+.login-page.fading {
+  opacity: 0;
 }
 .login-hero {
   display: flex;
@@ -196,6 +219,12 @@ export default {
 }
 .login-btn {
   margin-top: 12rpx;
+}
+.login-btn.pulsing {
+  animation: btn-pulse 1s ease infinite;
+}
+.login-btn.btn-success {
+  background: #8fb79b;
 }
 .login-hint {
   display: block;

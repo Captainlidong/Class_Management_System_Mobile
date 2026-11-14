@@ -4,9 +4,9 @@
   <web-view :src="appUrl"></web-view>
   <!-- #endif -->
   <!-- #ifndef APP-PLUS -->
-  <view class="page">
+  <view class="page" :class="{ entered }">
     <!-- 问候区 -->
-    <view class="greet-row">
+    <view class="greet-row anim d0">
       <view class="greet-left">
         <text class="greet-hello">{{ greetingText }}{{ auth.username ? '，' + auth.username : '' }}</text>
         <text class="greet-date">{{ dateText }}</text>
@@ -19,11 +19,11 @@
 
     <!-- 待办提醒卡（未完成时置顶显示） -->
     <template v-if="pendingTodos.length">
-      <view class="section-title">
+      <view class="section-title anim d1">
         <text>待办，一件件来</text>
         <text class="section-more" @tap="goTodos">全部 ›</text>
       </view>
-      <view class="card todo-card">
+      <view class="card todo-card anim d1">
         <view
           v-for="(t, idx) in urgentTodos"
           :key="t.id"
@@ -51,11 +51,11 @@
     </template>
 
     <!-- 英雄卡：收集进度 -->
-    <view class="section-title">
+    <view class="section-title anim d2">
       <text>资料收集与分发</text>
       <text class="section-more" @tap="goCollection">全部 ›</text>
     </view>
-    <view class="hero-card card" @tap="goCollection">
+    <view class="hero-card card anim d2" @tap="goCollection">
       <view class="hero-ring">
         <ProgressRing :size="170" :pct="overallPct" color="#3E5C4B" track="#DCE8DC">
           <text class="ring-pct">{{ overallPct }}%</text>
@@ -76,7 +76,7 @@
     </view>
 
     <!-- 三格小统计 -->
-    <view class="mini-grid">
+    <view class="mini-grid anim d3">
       <view class="mini-cell">
         <view class="mini-icon-wrap"><AppIcon name="clock" :size="18" /></view>
         <text class="mini-num">{{ pendingTodos.length }}</text>
@@ -95,8 +95,8 @@
     </view>
 
     <!-- 快捷入口 -->
-    <view class="section-title"><text>你来打理，记录交给喵</text></view>
-    <view class="quick-grid">
+    <view class="section-title anim d4"><text>你来打理，记录交给喵</text></view>
+    <view class="quick-grid anim d4">
       <view class="quick-cell" @tap="goCreate">
         <view class="quick-icon-wrap quick-green"><AppIcon name="plus" :size="20" /></view>
         <text class="quick-label">新建收集任务</text>
@@ -119,6 +119,21 @@
       </view>
     </view>
 
+    <!-- 欢迎过场（登录成功后的第一次进入） -->
+    <view class="welcome-overlay" :class="{ fadeout: overlayFade }" v-if="welcomeOverlay">
+      <view class="w-bubble">
+        <SpeechBubble :text="welcomeOverlayText" />
+      </view>
+      <view class="w-cat">
+        <CatWave :width="260" />
+      </view>
+      <view class="w-dots">
+        <view class="w-dot"></view>
+        <view class="w-dot wd2"></view>
+        <view class="w-dot wd3"></view>
+      </view>
+    </view>
+
     <view class="tabbar-spacer"></view>
     <TabBar current="index" />
   </view>
@@ -133,12 +148,13 @@ import ProgressRing from '../../components/ProgressRing.vue'
 import CatSitting from '../../components/cats/CatSitting.vue'
 import CatSleep from '../../components/cats/CatSleep.vue'
 import CatWave from '../../components/cats/CatWave.vue'
+import SpeechBubble from '../../components/cats/SpeechBubble.vue'
 import { useAuthStore } from '../../stores/auth'
 import { collectionTasks, leaveStats, studentsList, todoList } from '../../api'
 import { greeting, todayLabel, isPassed, fmtDateTime } from '../../utils/format'
 
 export default {
-  components: { TabBar, EmptyState, AppIcon, ProgressRing, CatSitting, CatSleep, CatWave },
+  components: { TabBar, EmptyState, AppIcon, ProgressRing, CatSitting, CatSleep, CatWave, SpeechBubble },
   data() {
     return {
       tasks: [],
@@ -146,6 +162,10 @@ export default {
       studentsCount: 0,
       pendingTodos: [],
       loaded: false,
+      welcomeOverlay: false,
+      welcomeName: '',
+      overlayFade: false,
+      entered: false,
       // APK 壳加载的线上地址（方案 A：web-view 壳）
       appUrl: 'http://your-server-ip/m/'
     }
@@ -164,6 +184,9 @@ export default {
     urgentTodos() {
       return this.pendingTodos.slice(0, 3)
     },
+    welcomeOverlayText() {
+      return `欢迎回来，${this.welcomeName || '班长'} 喵～`
+    },
     overallTotal() {
       return this.tasks.reduce((sum, t) => sum + (t.total || 0), 0)
     },
@@ -181,10 +204,26 @@ export default {
     return
     // #endif
     const auth = this.auth
+    // 欢迎过场：登录成功后的第一次进入
+    const flagRaw = uni.getStorageSync('miaoban_welcome')
+    if (flagRaw) {
+      let name = ''
+      try {
+        const f = typeof flagRaw === 'string' ? JSON.parse(flagRaw) : flagRaw
+        name = (f && f.name) || ''
+      } catch (e) {
+        /* ignore */
+      }
+      uni.removeStorageSync('miaoban_welcome')
+      this.welcomeName = name
+      this.welcomeOverlay = true
+      this.overlayFade = false
+      this.entered = false
+    }
     if (!auth.statusLoaded) {
-      auth.refresh().then(() => this.guardAndLoad())
+      auth.refresh().then(() => this.afterAuth())
     } else {
-      this.guardAndLoad()
+      this.afterAuth()
     }
   },
   onPullDownRefresh() {
@@ -192,12 +231,26 @@ export default {
   },
   methods: {
     fmtDateTime,
-    guardAndLoad() {
+    afterAuth() {
       if (this.auth.authRequired && !this.auth.loggedIn) {
         uni.reLaunch({ url: '/pages/login/login' })
         return
       }
-      this.load()
+      this.beginEnter()
+    },
+    /** 数据加载与欢迎过场并行；过场最短停留后淡出揭开 */
+    async beginEnter() {
+      const min = new Promise((resolve) => setTimeout(resolve, this.welcomeOverlay ? 1300 : 0))
+      await Promise.all([this.load(), min])
+      if (this.welcomeOverlay) {
+        this.overlayFade = true
+        setTimeout(() => {
+          this.welcomeOverlay = false
+          this.entered = true
+        }, 480)
+      } else {
+        this.entered = true
+      }
     },
     async load() {
       try {
@@ -515,5 +568,65 @@ export default {
 .quick-desc {
   font-size: 22rpx;
   color: $ink-light;
+}
+
+/* —— 欢迎过场 —— */
+.welcome-overlay {
+  position: fixed;
+  inset: 0;
+  background: $cream-bg;
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  transition: opacity 0.45s ease;
+}
+.welcome-overlay.fadeout {
+  opacity: 0;
+  pointer-events: none;
+}
+.w-bubble {
+  z-index: 2;
+}
+.w-cat {
+  margin-top: -12rpx;
+  animation: cat-sway 1.6s ease-in-out infinite;
+}
+.w-dots {
+  display: flex;
+  gap: 14rpx;
+  margin-top: 16rpx;
+}
+.w-dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: $primary;
+  animation: dot-bounce 1.1s ease infinite;
+}
+.w-dot.wd2 {
+  animation-delay: 0.15s;
+}
+.w-dot.wd3 {
+  animation-delay: 0.3s;
+}
+
+/* —— 登录后入场：卡片依次上浮渐入 —— */
+.page.entered .anim {
+  animation: rise 0.55s ease both;
+}
+.page.entered .d1 {
+  animation-delay: 0.09s;
+}
+.page.entered .d2 {
+  animation-delay: 0.18s;
+}
+.page.entered .d3 {
+  animation-delay: 0.27s;
+}
+.page.entered .d4 {
+  animation-delay: 0.36s;
 }
 </style>
