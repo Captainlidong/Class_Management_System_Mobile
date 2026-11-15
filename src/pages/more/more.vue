@@ -47,7 +47,7 @@
       <view class="menu-cell only" @tap="about">
         <view class="menu-icon"><AppIcon name="grid" :size="22" /></view>
         <text class="menu-name">关于</text>
-        <text class="menu-extra">v1.0.0</text>
+        <text class="menu-extra">v{{ version }}</text>
         <text class="menu-arrow">›</text>
       </view>
     </view>
@@ -69,7 +69,7 @@ import { studentsList, todoList } from '../../api'
 export default {
   components: { TabBar, AppIcon, CatWave },
   data() {
-    return { studentsCount: 0, pendingCount: 0 }
+    return { studentsCount: 0, pendingCount: 0, version: __APP_VERSION__ }
   },
   computed: {
     auth() {
@@ -100,7 +100,7 @@ export default {
     about() {
       uni.showModal({
         title: '关于',
-        content: '班级管理助手移动端 v1.0.0\n基于 uni-app · 数据与桌面版互通',
+        content: `班级管理助手移动端 v${__APP_VERSION__}\n基于 uni-app · 数据与桌面版互通`,
         showCancel: false,
         confirmText: '知道了'
       })

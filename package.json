@@ -1,6 +1,6 @@
 {
   "name": "classmgmt-uniapp-mobile",
-  "version": "1.0.0",
+  "version": "1.1.2",
   "private": true,
   "description": "班级成员管理系统移动端（uni-app Vue3 H5）",
   "scripts": {
