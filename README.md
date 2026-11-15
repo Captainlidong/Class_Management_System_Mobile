@@ -6,7 +6,7 @@
 
 一套代码 → **H5 网页** / **Android APP**（web-view 壳）· 与桌面端共用同一个后端 · 同源 Cookie 会话互通
 
-[功能总览](#-功能总览) · [快速开始](#-快速开始) · [构建与部署](#-构建与部署) · [架构设计](docs/ARCHITECTURE.md) · [API 文档](docs/API.md) · [贡献指南](CONTRIBUTING.md) · [更新日志](CHANGELOG.md)
+[功能总览](#-功能总览) · [界面预览](#-界面预览) · [快速开始](#-快速开始) · [构建与部署](#-构建与部署) · [架构设计](docs/ARCHITECTURE.md) · [API 文档](docs/API.md) · [贡献指南](CONTRIBUTING.md) · [更新日志](CHANGELOG.md)
 
 ![License](https://img.shields.io/badge/license-MIT-green) ![Vue](https://img.shields.io/badge/Vue-3.4-42b883) ![uni-app](https://img.shields.io/badge/uni--app-Vue3%20%2B%20Vite-2B9939) ![PRs](https://img.shields.io/badge/PRs-welcome-ff69b4)
 
@@ -23,6 +23,25 @@
 - **有性格的 UI**：奶油底 × 深林绿的治愈系配色，配自研手绘三花猫插画家族与 30+ 线性图标库，拒绝 emoji 凑数
 
 > 桌面端 + 后端（Spring Boot 3.2 / Java / MySQL）：[mimo_Class_Management_System](https://github.com/Captainlidong/mimo_Class_Management_System)
+
+## 📱 界面预览
+
+> 以下截图取自 390×844 手机视口下的真实渲染（演示数据），登录后一路可见。
+
+| 登录 | 欢迎过场 | 首页 |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/login.png" width="245"/> | <img src="docs/screenshots/welcome.png" width="245"/> | <img src="docs/screenshots/home.png" width="245"/> |
+
+| 资料收集与分发 | 任务详情 | 待办事务 |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/collection-list.png" width="245"/> | <img src="docs/screenshots/collection-detail.png" width="245"/> | <img src="docs/screenshots/todos.png" width="245"/> |
+
+| 请假记录 | 奖学金统计 | 更多 |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/leaves.png" width="245"/> | <img src="docs/screenshots/scholarships.png" width="245"/> | <img src="docs/screenshots/more.png" width="245"/> |
+
+<p align="right"><sub>手绘三花猫插画 · 奶油底 × 深林绿主题 · 全站线性图标</sub></p>
+
 
 ## 🐱 功能总览
 
