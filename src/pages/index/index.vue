@@ -152,6 +152,7 @@ import SpeechBubble from '../../components/cats/SpeechBubble.vue'
 import { useAuthStore } from '../../stores/auth'
 import { collectionTasks, leaveStats, studentsList, todoList } from '../../api'
 import { greeting, todayLabel, isPassed, fmtDateTime } from '../../utils/format'
+import { APP_ENTRY_URL } from '../../config/server'
 
 export default {
   components: { TabBar, EmptyState, AppIcon, ProgressRing, CatSitting, CatSleep, CatWave, SpeechBubble },
@@ -166,8 +167,8 @@ export default {
       welcomeName: '',
       overlayFade: false,
       entered: false,
-      // APK 壳加载的线上地址（方案 A：web-view 壳）
-      appUrl: 'http://your-server-ip/m/'
+      // APK 壳加载的线上地址（方案 A：web-view 壳，地址配置在 src/config/server.js / .env.local）
+      appUrl: APP_ENTRY_URL
     }
   },
   computed: {
