@@ -1,28 +1,86 @@
-/* uni-app 每个页面的 style 编译都会自动注入本文件 —— 主题变量（喵班 · 奶油治愈系） */
+/* uni-app 每个页面的 style 编译都会自动注入本文件 —— 主题变量（喵班 · 奶油治愈系）
+ *
+ * 深色模式方案：SCSS 变量指向 CSS 自定义属性，运行时由 prefers-color-scheme 切换。
+ * 页面里所有 $token 用法零改动，编译后自动变成 var(--mb-*)，跟随系统深色。
+ */
+
+/* —— CSS 变量：浅色（默认） —— */
+:root,
+page {
+  --mb-cream-bg: #F7F2E7;
+  --mb-card-bg: #FFFFFF;
+  --mb-sage-card: #DCE8DC;
+  --mb-sage-light: #E9F0E9;
+  --mb-ink: #2F3B33;
+  --mb-ink-light: #8A9A8E;
+  --mb-line: #E8E2D4;
+  --mb-primary: #3E5C4B;
+  --mb-primary-deep: #2F4838;
+  --mb-primary-soft: rgba(62, 92, 75, 0.12);
+  --mb-matcha: #8FB79B;
+  --mb-peach: #E8B4A0;
+  --mb-butter: #E3CFA0;
+  --mb-taro: #CBDACB;
+  --mb-berry: #C96F5E;
+  --mb-warn: #D9A441;
+  /* 半透明白（芯片底/浮层）与主色底上的文字 */
+  --mb-veil: rgba(255, 255, 255, 0.9);
+  --mb-on-primary: #FFFFFF;
+  --mb-shadow: rgba(60, 45, 35, 0.1);
+}
+
+/* —— CSS 变量：深色（跟随系统） —— */
+@media (prefers-color-scheme: dark) {
+  :root,
+  page {
+    --mb-cream-bg: #1A211D;
+    --mb-card-bg: #242E28;
+    --mb-sage-card: #2A362F;
+    --mb-sage-light: #33413A;
+    --mb-ink: #E8EDE9;
+    --mb-ink-light: #93A398;
+    --mb-line: #39443D;
+    --mb-primary: #7FB08F;
+    --mb-primary-deep: #9BC4A9;
+    --mb-primary-soft: rgba(127, 176, 143, 0.18);
+    --mb-matcha: #7FB08F;
+    --mb-peach: #C98F7C;
+    --mb-butter: #C9B47B;
+    --mb-taro: #3A4740;
+    --mb-berry: #D9756B;
+    --mb-warn: #E0B455;
+    --mb-veil: rgba(36, 46, 40, 0.92);
+    --mb-on-primary: #14201A;
+    --mb-shadow: rgba(0, 0, 0, 0.35);
+  }
+}
 
 /* —— 底色与卡片 —— */
-$cream-bg: #F7F2E7;        // 奶油底
-$card-bg: #FFFFFF;         // 卡片白
-$sage-card: #DCE8DC;       // 鼠尾草浅绿卡
-$sage-light: #E9F0E9;      // 更浅的鼠尾草
+$cream-bg: var(--mb-cream-bg);         // 奶油底
+$card-bg: var(--mb-card-bg);           // 卡片白
+$sage-card: var(--mb-sage-card);       // 鼠尾草浅绿卡
+$sage-light: var(--mb-sage-light);     // 更浅的鼠尾草
 
 /* —— 文字 —— */
-$ink: #2F3B33;             // 墨绿灰主文字
-$ink-light: #8A9A8E;       // 次级灰绿
-$line: #E8E2D4;            // 奶油分隔线
+$ink: var(--mb-ink);                   // 墨绿灰主文字
+$ink-light: var(--mb-ink-light);       // 次级灰绿
+$line: var(--mb-line);                 // 奶油分隔线
 
 /* —— 主色系 —— */
-$primary: #3E5C4B;         // 深林绿（主操作）
-$primary-deep: #2F4838;    // 更深绿（强调）
-$primary-soft: rgba(62, 92, 75, 0.12);  // 主色淡底
+$primary: var(--mb-primary);           // 深林绿（主操作）
+$primary-deep: var(--mb-primary-deep); // 更深绿（强调）
+$primary-soft: var(--mb-primary-soft); // 主色淡底
+$on-primary: var(--mb-on-primary);     // 主色底上的文字
+$veil: var(--mb-veil);                 // 半透明浮层底
+$shadow: var(--mb-shadow);             // 阴影色
 
 /* —— 语义/点缀色（治愈系柔和版） —— */
-$matcha: #8FB79B;          // 中鼠尾草绿（完成/收集，可配白字）
-$peach: #E8B4A0;           // 陶土蜜桃（分发/暖点缀，可配白字）
-$butter: #E3CFA0;          // 暖赭黄（待办/提醒底）
-$taro: #CBDACB;            // 浅鼠尾草（标签底）
-$berry: #C96F5E;           // 陶土红（危险/删除）
-$warn: #D9A441;            // 暖赭（到期提醒文字）
+$matcha: var(--mb-matcha);             // 中鼠尾草绿（完成/收集）
+$peach: var(--mb-peach);               // 陶土蜜桃（分发/暖点缀）
+$butter: var(--mb-butter);             // 暖赭黄（待办/提醒底）
+$taro: var(--mb-taro);                 // 浅鼠尾草（标签底）
+$berry: var(--mb-berry);               // 陶土红（危险/删除）
+$warn: var(--mb-warn);                 // 暖赭（到期提醒文字）
 
 /* —— 圆角 —— */
 $radius-card: 32rpx;

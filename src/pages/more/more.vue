@@ -194,7 +194,7 @@ export default {
   width: 96rpx;
   height: 96rpx;
   border-radius: 50%;
-  background: linear-gradient(135deg, #EEF0E7, #DCE8DC);
+  background: linear-gradient(135deg, $sage-light, $sage-card);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -230,8 +230,8 @@ export default {
   width: 60rpx;
   height: 60rpx;
   border-radius: 20rpx;
-  background: #F1EDE0;
-  color: #3E5C4B;
+  background: $cream-bg;
+  color: $primary;
   display: flex;
   align-items: center;
   justify-content: center;

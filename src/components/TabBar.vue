@@ -51,13 +51,13 @@ export default {
   right: 20rpx;
   bottom: calc(16rpx + env(safe-area-inset-bottom));
   display: flex;
-  background: rgba(255, 255, 255, 0.94);
+  background: $veil;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1rpx solid rgba(232, 226, 212, 0.8);
+  border: 1rpx solid $line;
   border-radius: 40rpx;
   padding: 12rpx 10rpx;
-  box-shadow: 0 10rpx 40rpx rgba(122, 96, 76, 0.12);
+  box-shadow: 0 10rpx 40rpx $shadow;
   z-index: 999;
 }
 .tab-item {

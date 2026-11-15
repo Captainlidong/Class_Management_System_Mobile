@@ -79,9 +79,11 @@
     }
   ],
   "globalStyle": {
-    "navigationBarTextStyle": "black",
+    "navigationBarTextStyle": "@navTextStyle",
     "navigationBarTitleText": "喵班",
-    "navigationBarBackgroundColor": "#F7F2E7",
-    "backgroundColor": "#F7F2E7"
+    "navigationBarBackgroundColor": "@navBgColor",
+    "backgroundColor": "@bgColor",
+    "darkmode": true,
+    "themeLocation": "theme.json"
   }
 }

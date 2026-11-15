@@ -179,7 +179,7 @@ export default {
   margin-top: 10rpx;
 }
 .login-card {
-  background: #fff;
+  background: $card-bg;
   border-radius: 40rpx;
   padding: 44rpx 36rpx;
   border: 1rpx solid rgba(232, 226, 212, 0.7);
@@ -208,7 +208,7 @@ export default {
   width: 220rpx;
   height: 72rpx;
   border-radius: 16rpx;
-  background: #fbf7ee;
+  background: $cream-bg;
   flex-shrink: 0;
 }
 .captcha-loading {
@@ -224,7 +224,7 @@ export default {
   animation: btn-pulse 1s ease infinite;
 }
 .login-btn.btn-success {
-  background: #8fb79b;
+  background: $matcha;
 }
 .login-hint {
   display: block;

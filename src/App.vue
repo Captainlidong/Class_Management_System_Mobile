@@ -33,8 +33,8 @@ page {
   border-radius: $radius-card;
   padding: 28rpx;
   margin: 0 24rpx 24rpx;
-  border: 1rpx solid rgba(232, 226, 212, 0.7);
-  box-shadow: 0 4rpx 18rpx rgba(122, 96, 76, 0.05);
+  border: 1rpx solid $line;
+  box-shadow: 0 4rpx 18rpx $shadow;
 }
 
 /* —— 胶囊按钮（深绿底白字，参考图样式） —— */
@@ -53,7 +53,7 @@ page {
 }
 .btn-primary {
   background: $primary;
-  color: #fff;
+  color: $on-primary;
 }
 .btn-ghost {
   background: $primary-soft;
@@ -82,12 +82,12 @@ page {
 }
 .pill-undone {
   background: rgba(217, 164, 65, 0.18);
-  color: #a2681f;
+  color: $warn;
 }
 
 /* —— 通用输入：奶油内衬 —— */
 .field-input {
-  background: #fbf7ee;
+  background: $cream-bg;
   border-radius: 20rpx;
   padding: 20rpx 24rpx;
   font-size: 28rpx;

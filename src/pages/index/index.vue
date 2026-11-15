@@ -83,7 +83,7 @@
     </view>
     <view class="hero-card card anim d2" @tap="goCollection">
       <view class="hero-ring">
-        <ProgressRing :size="170" :pct="overallPct" color="#3E5C4B" track="#DCE8DC">
+        <ProgressRing :size="170" :pct="overallPct" color="var(--mb-primary)" track="var(--mb-sage-card)">
           <text class="ring-pct">{{ overallPct }}%</text>
           <text class="ring-label">今日完成</text>
         </ProgressRing>
@@ -435,7 +435,7 @@ export default {
   width: 76rpx;
   height: 76rpx;
   border-radius: 50%;
-  background: #fff;
+  background: $card-bg;
   border: 1rpx solid $line;
   display: flex;
   align-items: center;
@@ -450,7 +450,7 @@ export default {
   height: 14rpx;
   border-radius: 50%;
   background: $berry;
-  border: 2rpx solid #fff;
+  border: 2rpx solid $card-bg;
 }
 
 /* —— 待办提醒卡 —— */
@@ -526,11 +526,11 @@ export default {
 }
 .badge-overdue {
   background: rgba(201, 111, 94, 0.16);
-  color: #a8503f;
+  color: $berry;
 }
 .badge-today {
   background: rgba(217, 164, 65, 0.2);
-  color: #a2681f;
+  color: $warn;
 }
 .badge-normal {
   background: $sage-light;
@@ -595,7 +595,7 @@ export default {
   align-items: center;
   gap: 8rpx;
   background: $primary;
-  color: #fff;
+  color: $on-primary;
   border-radius: 999rpx;
   padding: 14rpx 26rpx;
   font-size: 24rpx;
@@ -617,8 +617,8 @@ export default {
 }
 .mini-cell {
   flex: 1;
-  background: #fff;
-  border: 1rpx solid rgba(232, 226, 212, 0.7);
+  background: $card-bg;
+  border: 1rpx solid $line;
   border-radius: 28rpx;
   padding: 22rpx 0 20rpx;
   display: flex;
@@ -656,8 +656,8 @@ export default {
 }
 .quick-cell {
   width: calc(50% - 9rpx);
-  background: #fff;
-  border: 1rpx solid rgba(232, 226, 212, 0.7);
+  background: $card-bg;
+  border: 1rpx solid $line;
   border-radius: 28rpx;
   padding: 26rpx 26rpx 22rpx;
   box-sizing: border-box;
@@ -680,15 +680,15 @@ export default {
 }
 .quick-sage {
   background: rgba(143, 183, 155, 0.24);
-  color: #4e6b58;
+  color: $primary-deep;
 }
 .quick-butter {
   background: rgba(217, 164, 65, 0.18);
-  color: #a2681f;
+  color: $warn;
 }
 .quick-peach {
   background: rgba(201, 111, 94, 0.14);
-  color: #b06050;
+  color: $berry;
 }
 .quick-label {
   font-size: 27rpx;
