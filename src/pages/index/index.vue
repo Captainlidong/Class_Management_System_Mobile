@@ -37,7 +37,10 @@
             <CatWave v-else :width="56" />
           </view>
           <view class="todo-row-main">
-            <text class="todo-title">{{ t.title }}</text>
+            <view class="todo-title-line">
+              <view class="todo-prio" :class="t.priority || 'mid'"></view>
+              <text class="todo-title">{{ t.title }}</text>
+            </view>
             <text v-if="t.dueAt" class="todo-due" :class="{ overdue: t.overdue }">{{ dueLabel(t) }}</text>
           </view>
           <view class="todo-badge" :class="t.overdue ? 'badge-overdue' : (t.dueToday ? 'badge-today' : 'badge-normal')">
@@ -370,6 +373,25 @@ export default {
   min-width: 0;
   display: flex;
   flex-direction: column;
+}
+.todo-title-line {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  min-width: 0;
+}
+.todo-prio {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: $ink-light;
+}
+.todo-prio.high {
+  background: $berry;
+}
+.todo-prio.mid {
+  background: $warn;
 }
 .todo-title {
   font-size: 28rpx;

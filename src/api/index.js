@@ -68,3 +68,8 @@ export const checkRun = (payload) => post('/check', payload)
 export const checkRecords = (params) => get('/check-records', params)
 export const checkRecord = (id) => get(`/check-records/${id}`)
 export const checkRecordDelete = (id) => del(`/check-records/${id}`)
+
+/* —— 长期任务 / 自定义分组（只读视图） —— */
+export const taskList = () => get('/tasks')
+export const taskRecords = (id) => get(`/tasks/${id}/records`)
+export const groupList = () => get('/groups')

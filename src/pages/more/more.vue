@@ -17,6 +17,18 @@
         <text class="menu-extra">{{ pendingCount ? pendingCount + ' 件未完成' : '' }}</text>
         <text class="menu-arrow">›</text>
       </view>
+      <view class="menu-cell" @tap="go('/pages/more/tasks')">
+        <view class="menu-icon"><AppIcon name="calendar" :size="22" /></view>
+        <text class="menu-name">长期任务</text>
+        <text class="menu-extra"></text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-cell" @tap="go('/pages/more/groups')">
+        <view class="menu-icon"><AppIcon name="grid" :size="22" /></view>
+        <text class="menu-name">自定义分组</text>
+        <text class="menu-extra"></text>
+        <text class="menu-arrow">›</text>
+      </view>
       <view class="menu-cell" @tap="go('/pages/more/students')">
         <view class="menu-icon"><AppIcon name="users" :size="22" /></view>
         <text class="menu-name">基准名单</text>
@@ -100,7 +112,7 @@ export default {
     about() {
       uni.showModal({
         title: '关于',
-        content: `班级管理助手移动端 v${__APP_VERSION__}\n基于 uni-app · 数据与桌面版互通`,
+        content: `喵班 · 班级事务管理系统移动端 v${__APP_VERSION__}\n基于 uni-app · 数据与桌面版互通`,
         showCancel: false,
         confirmText: '知道了'
       })

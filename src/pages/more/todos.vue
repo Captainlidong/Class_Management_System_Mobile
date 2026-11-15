@@ -14,7 +14,14 @@
         <view class="todo-head">
           <view class="check-circle" :class="{ on: t.done }" @tap="toggleDone(t)">✓</view>
           <view class="todo-main" @tap="toggleDone(t)">
-            <text class="todo-title" :class="{ done: t.done }">{{ t.title }}</text>
+            <view class="todo-title-row">
+              <view class="prio-dot" :class="t.priority || 'mid'"></view>
+              <text class="todo-title" :class="{ done: t.done }">{{ t.title }}</text>
+              <text v-if="t.repeatRule && t.repeatRule !== 'none'" class="repeat-mark">↻ {{ repeatLabel(t.repeatRule) }}</text>
+            </view>
+            <view class="todo-meta">
+              <text v-if="t.category && t.category !== '其他'" class="cate-chip">{{ t.category }}</text>
+            </view>
             <text v-if="t.detail" class="todo-detail">{{ t.detail }}</text>
             <text v-if="t.dueAt" class="todo-due" :class="t.overdue ? 'overdue' : ''">
               ⏱ {{ t.overdue ? '已过期 · ' : '' }}{{ fmtDateTime(t.dueAt) }}{{ t.done && t.doneAt ? `　✔ ${fmtDateTime(t.doneAt)} 完成` : '' }}
@@ -56,6 +63,28 @@
           <text v-if="form.dueDate" class="dt-clear" @tap="form.dueDate = ''; form.dueTime = ''">清除</text>
         </view>
         <text class="popup-hint">填了就按时间提醒排序；不填则作为无期限的跟进事项（如"等通知再办"）。</text>
+        <text class="popup-label">优先级 / 分类</text>
+        <view class="dt-row">
+          <picker mode="selector" :range="PRIORITY_LABELS" :value="priorityIndex" @change="(e) => (form.priority = PRIORITY_KEYS[e.detail.value])">
+            <view class="field-input dt-input">
+              <text>{{ priorityLabel }}</text>
+            </view>
+          </picker>
+          <picker mode="selector" :range="CATEGORIES" :value="categoryIndex" @change="(e) => (form.category = CATEGORIES[e.detail.value])">
+            <view class="field-input dt-input">
+              <text>{{ form.category || '其他' }}</text>
+            </view>
+          </picker>
+        </view>
+        <text class="popup-label">重复规则</text>
+        <view class="dt-row">
+          <picker mode="selector" :range="REPEAT_LABELS" :value="repeatIndex" @change="(e) => (form.repeatRule = REPEAT_KEYS[e.detail.value])">
+            <view class="field-input dt-input">
+              <text>{{ repeatLabel(form.repeatRule) || '不重复' }}</text>
+            </view>
+          </picker>
+        </view>
+        <text class="popup-hint">设了重复且填了截止时间：完成后自动生成下一期（如每周例会、每日体温上报）。</text>
         <button class="btn btn-primary popup-btn" :disabled="submitting" @tap="submit">
           {{ submitting ? '保存中…' : (form.id ? '保存修改' : '创建待办') }}
         </button>
@@ -74,6 +103,12 @@ function pad(n) {
   return String(n).padStart(2, '0')
 }
 
+const PRIORITY_KEYS = ['high', 'mid', 'low']
+const PRIORITY_LABELS = ['高', '中', '低']
+const CATEGORIES = ['教学', '活动', '资料', '通知', '财务', '其他']
+const REPEAT_KEYS = ['none', 'daily', 'weekly', 'monthly']
+const REPEAT_LABELS = ['不重复', '每天', '每周', '每月']
+
 export default {
   components: { EmptyState, AppIcon },
   data() {
@@ -81,7 +116,7 @@ export default {
       todos: [],
       overlay: false,
       submitting: false,
-      form: { id: null, title: '', detail: '', dueDate: '', dueTime: '' }
+      form: { id: null, title: '', detail: '', dueDate: '', dueTime: '', priority: 'mid', category: '其他', repeatRule: 'none' }
     }
   },
   computed: {
@@ -90,6 +125,18 @@ export default {
     },
     doneCount() {
       return this.todos.filter((t) => t.done).length
+    },
+    priorityIndex() {
+      return Math.max(0, PRIORITY_KEYS.indexOf(this.form.priority))
+    },
+    categoryIndex() {
+      return Math.max(0, CATEGORIES.indexOf(this.form.category || '其他'))
+    },
+    repeatIndex() {
+      return Math.max(0, REPEAT_KEYS.indexOf(this.form.repeatRule || 'none'))
+    },
+    priorityLabel() {
+      return PRIORITY_LABELS[Math.max(0, PRIORITY_KEYS.indexOf(this.form.priority))]
     }
   },
   onShow() {
@@ -100,6 +147,10 @@ export default {
   },
   methods: {
     fmtDateTime,
+    repeatLabel(rule) {
+      const i = REPEAT_KEYS.indexOf(rule)
+      return i >= 0 ? REPEAT_LABELS[i] : '不重复'
+    },
     async load() {
       try {
         this.todos = (await todoList()) || []
@@ -108,7 +159,7 @@ export default {
       }
     },
     openCreate() {
-      this.form = { id: null, title: '', detail: '', dueDate: '', dueTime: '' }
+      this.form = { id: null, title: '', detail: '', dueDate: '', dueTime: '', priority: 'mid', category: '其他', repeatRule: 'none' }
       this.overlay = true
     },
     openEdit(t) {
@@ -117,7 +168,10 @@ export default {
         title: t.title,
         detail: t.detail || '',
         dueDate: t.dueAt ? t.dueAt.slice(0, 10) : '',
-        dueTime: t.dueAt ? t.dueAt.slice(11, 16) : ''
+        dueTime: t.dueAt ? t.dueAt.slice(11, 16) : '',
+        priority: t.priority || 'mid',
+        category: t.category || '其他',
+        repeatRule: t.repeatRule || 'none'
       }
       this.overlay = true
     },
@@ -136,7 +190,10 @@ export default {
         const payload = {
           title: this.form.title.trim(),
           detail: this.form.detail,
-          dueAt: this.composeDue()
+          dueAt: this.composeDue(),
+          priority: this.form.priority,
+          category: this.form.category,
+          repeatRule: this.form.repeatRule
         }
         if (this.form.id) {
           await todoUpdate(this.form.id, payload)
@@ -230,10 +287,52 @@ export default {
   display: flex;
   flex-direction: column;
 }
+.todo-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  min-width: 0;
+}
+.prio-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: $ink-light;
+}
+.prio-dot.high {
+  background: $berry;
+}
+.prio-dot.mid {
+  background: $warn;
+}
+.prio-dot.low {
+  background: $ink-light;
+}
 .todo-title {
   font-size: 29rpx;
   font-weight: 700;
   color: $ink;
+  flex: 1;
+  min-width: 0;
+}
+.repeat-mark {
+  font-size: 22rpx;
+  color: $ink-light;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.todo-meta {
+  margin-top: 6rpx;
+}
+.cate-chip {
+  display: inline-flex;
+  font-size: 21rpx;
+  color: #3e5c4b;
+  background: #dce8dc;
+  border-radius: 999rpx;
+  padding: 2rpx 16rpx;
+  font-weight: 600;
 }
 .todo-title.done {
   text-decoration: line-through;

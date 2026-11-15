@@ -50,6 +50,14 @@
       "style": { "navigationBarTitleText": "待办事务" }
     },
     {
+      "path": "pages/more/tasks",
+      "style": { "navigationBarTitleText": "长期任务", "enablePullDownRefresh": true }
+    },
+    {
+      "path": "pages/more/groups",
+      "style": { "navigationBarTitleText": "自定义分组", "enablePullDownRefresh": true }
+    },
+    {
       "path": "pages/more/students",
       "style": { "navigationBarTitleText": "基准名单" }
     },
