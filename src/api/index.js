@@ -73,3 +73,11 @@ export const checkRecordDelete = (id) => del(`/check-records/${id}`)
 export const taskList = () => get('/tasks')
 export const taskRecords = (id) => get(`/tasks/${id}/records`)
 export const groupList = () => get('/groups')
+
+/* —— 学期档案 / 通知中心 —— */
+export const termList = () => get('/terms')
+export const termSwitch = (id) => post(`/terms/${id}/switch`)
+export const termCreate = (payload) => post('/terms', payload)
+export const notificationList = () => get('/notifications')
+export const notificationRead = (id) => post(`/notifications/${id}/read`)
+export const notificationReadAll = () => post('/notifications/read-all')

@@ -11,9 +11,9 @@
         <text class="greet-hello">{{ greetingText }}{{ auth.username ? '，' + auth.username : '' }}</text>
         <text class="greet-date">{{ dateText }}</text>
       </view>
-      <view class="greet-bell" @tap="goTodos">
+      <view class="greet-bell" @tap="goMore">
         <AppIcon name="bell" :size="22" />
-        <view v-if="pendingTodos.length" class="bell-dot"></view>
+        <view v-if="unread" class="bell-dot"></view>
       </view>
     </view>
 
@@ -153,7 +153,7 @@ import CatSleep from '../../components/cats/CatSleep.vue'
 import CatWave from '../../components/cats/CatWave.vue'
 import SpeechBubble from '../../components/cats/SpeechBubble.vue'
 import { useAuthStore } from '../../stores/auth'
-import { collectionTasks, leaveStats, studentsList, todoList } from '../../api'
+import { collectionTasks, leaveStats, studentsList, todoList, notificationList } from '../../api'
 import { greeting, todayLabel, isPassed, fmtDateTime } from '../../utils/format'
 import { APP_ENTRY_URL } from '../../config/server'
 
@@ -165,6 +165,7 @@ export default {
       leaveStats: {},
       studentsCount: 0,
       pendingTodos: [],
+      unread: 0,
       loaded: false,
       welcomeOverlay: false,
       welcomeName: '',
@@ -258,16 +259,18 @@ export default {
     },
     async load() {
       try {
-        const [tasks, stats, students, todos] = await Promise.all([
+        const [tasks, stats, students, todos, notices] = await Promise.all([
           collectionTasks(),
           leaveStats().catch(() => ({})),
           studentsList().catch(() => ({ count: 0 })),
-          todoList().catch(() => [])
+          todoList().catch(() => []),
+          notificationList().catch(() => ({ unread: 0 }))
         ])
         this.tasks = (tasks || []).map((t) => ({ ...t, passed: isPassed(t.deadline) }))
         this.leaveStats = stats || {}
         this.studentsCount = (students && students.count) || 0
         this.pendingTodos = (todos || []).filter((t) => !t.done)
+        this.unread = (notices && notices.unread) || 0
       } catch (e) {
         /* 拦截器已提示 */
       }
@@ -277,8 +280,8 @@ export default {
       if (t.dueToday) return `今天到期 · ${fmtDateTime(t.dueAt).slice(-5)}`
       return `截止 ${fmtDateTime(t.dueAt)}`
     },
-    goTodos() {
-      uni.navigateTo({ url: '/pages/more/todos' })
+    goMore() {
+      uni.switchTab({ url: '/pages/more/more' })
     },
     goCollection() {
       uni.redirectTo({ url: '/pages/collection/list' })

@@ -11,6 +11,18 @@
     </view>
 
     <view class="card menu-card">
+      <view class="menu-cell" @tap="go('/pages/more/notifications')">
+        <view class="menu-icon"><AppIcon name="bell" :size="22" /></view>
+        <text class="menu-name">消息中心</text>
+        <text class="menu-extra">{{ unread ? unread + ' 条未读' : '' }}</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-cell" @tap="switchTerm">
+        <view class="menu-icon"><AppIcon name="calendar" :size="22" /></view>
+        <text class="menu-name">学期切换</text>
+        <text class="menu-extra">{{ termName }}</text>
+        <text class="menu-arrow">›</text>
+      </view>
       <view class="menu-cell" @tap="go('/pages/more/todos')">
         <view class="menu-icon"><AppIcon name="clock" :size="22" /></view>
         <text class="menu-name">待办事务</text>
@@ -76,12 +88,12 @@ import TabBar from '../../components/TabBar.vue'
 import AppIcon from '../../components/AppIcon.vue'
 import CatWave from '../../components/cats/CatWave.vue'
 import { useAuthStore } from '../../stores/auth'
-import { studentsList, todoList } from '../../api'
+import { studentsList, todoList, notificationList, termList, termSwitch } from '../../api'
 
 export default {
   components: { TabBar, AppIcon, CatWave },
   data() {
-    return { studentsCount: 0, pendingCount: 0, version: __APP_VERSION__ }
+    return { studentsCount: 0, pendingCount: 0, unread: 0, termName: '', terms: [], version: __APP_VERSION__ }
   },
   computed: {
     auth() {
@@ -105,6 +117,39 @@ export default {
       } catch (e) {
         /* 拦截器已提示 */
       }
+      try {
+        const notices = await notificationList()
+        this.unread = notices.unread || 0
+      } catch (e) {
+        /* 拦截器已提示 */
+      }
+      try {
+        const terms = await termList()
+        this.terms = terms.terms || []
+        const view = this.terms.find((t) => t.current) || this.terms[0]
+        this.termName = view ? view.name : ''
+      } catch (e) {
+        /* 拦截器已提示 */
+      }
+    },
+    switchTerm() {
+      if (!this.terms.length) {
+        uni.showToast({ title: '暂无学期数据', icon: 'none' })
+        return
+      }
+      uni.showActionSheet({
+        itemList: this.terms.map((t) => t.name + (t.archived ? '（已归档）' : '')),
+        success: async (res) => {
+          const target = this.terms[res.tapIndex]
+          if (!target || target.current) return
+          try {
+            await termSwitch(target.id)
+            uni.reLaunch({ url: '/pages/index/index' })
+          } catch (e) {
+            /* 拦截器已提示 */
+          }
+        }
+      })
     },
     go(url) {
       uni.navigateTo({ url })

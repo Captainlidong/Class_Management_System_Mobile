@@ -50,6 +50,10 @@
       "style": { "navigationBarTitleText": "待办事务" }
     },
     {
+      "path": "pages/more/notifications",
+      "style": { "navigationBarTitleText": "消息中心", "enablePullDownRefresh": true }
+    },
+    {
       "path": "pages/more/tasks",
       "style": { "navigationBarTitleText": "长期任务", "enablePullDownRefresh": true }
     },
