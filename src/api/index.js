@@ -81,3 +81,6 @@ export const termCreate = (payload) => post('/terms', payload)
 export const notificationList = () => get('/notifications')
 export const notificationRead = (id) => post(`/notifications/${id}/read`)
 export const notificationReadAll = () => post('/notifications/read-all')
+
+/* —— 数据洞察 —— */
+export const dashboardTrends = () => get('/dashboard/trends')

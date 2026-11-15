@@ -53,6 +53,29 @@
       </view>
     </template>
 
+    <!-- 近 8 周速览（迷你趋势） -->
+    <view v-if="trends" class="card mini-trend anim d1">
+      <view class="mt-head">
+        <text class="mt-title">近 8 周速览</text>
+        <text class="mt-sub">请假 {{ sum(trends.weeklyLeave) }} 人次 · 筛查 {{ sum(trends.weeklyChecks) }} 次</text>
+      </view>
+      <view class="mt-bars">
+        <view v-for="(w, i) in trends.weeks" :key="w + i" class="mt-col">
+          <view class="mt-bar-wrap">
+            <view class="mt-bar mt-leave" :style="{ height: barH(trends.weeklyLeave, i) + 'rpx' }"></view>
+            <view class="mt-bar mt-check" :style="{ height: barH(trends.weeklyChecks, i) + 'rpx' }"></view>
+          </view>
+          <text class="mt-label">{{ w }}</text>
+        </view>
+      </view>
+      <view class="mt-legend">
+        <text class="mt-dot mt-leave"></text>
+        <text class="mt-legend-text">请假</text>
+        <text class="mt-dot mt-check"></text>
+        <text class="mt-legend-text">筛查</text>
+      </view>
+    </view>
+
     <!-- 英雄卡：收集进度 -->
     <view class="section-title anim d2">
       <text>资料收集与分发</text>
@@ -153,7 +176,7 @@ import CatSleep from '../../components/cats/CatSleep.vue'
 import CatWave from '../../components/cats/CatWave.vue'
 import SpeechBubble from '../../components/cats/SpeechBubble.vue'
 import { useAuthStore } from '../../stores/auth'
-import { collectionTasks, leaveStats, studentsList, todoList, notificationList } from '../../api'
+import { collectionTasks, leaveStats, studentsList, todoList, notificationList, dashboardTrends } from '../../api'
 import { greeting, todayLabel, isPassed, fmtDateTime } from '../../utils/format'
 import { APP_ENTRY_URL } from '../../config/server'
 
@@ -166,6 +189,7 @@ export default {
       studentsCount: 0,
       pendingTodos: [],
       unread: 0,
+      trends: null,
       loaded: false,
       welcomeOverlay: false,
       welcomeName: '',
@@ -259,21 +283,31 @@ export default {
     },
     async load() {
       try {
-        const [tasks, stats, students, todos, notices] = await Promise.all([
+        const [tasks, stats, students, todos, notices, trends] = await Promise.all([
           collectionTasks(),
           leaveStats().catch(() => ({})),
           studentsList().catch(() => ({ count: 0 })),
           todoList().catch(() => []),
-          notificationList().catch(() => ({ unread: 0 }))
+          notificationList().catch(() => ({ unread: 0 })),
+          dashboardTrends().catch(() => null)
         ])
         this.tasks = (tasks || []).map((t) => ({ ...t, passed: isPassed(t.deadline) }))
         this.leaveStats = stats || {}
         this.studentsCount = (students && students.count) || 0
         this.pendingTodos = (todos || []).filter((t) => !t.done)
         this.unread = (notices && notices.unread) || 0
+        this.trends = trends || null
       } catch (e) {
         /* 拦截器已提示 */
       }
+    },
+    sum(arr) {
+      return (arr || []).reduce((a, b) => a + b, 0)
+    },
+    barH(arr, i) {
+      const max = Math.max(...(arr || [1]), 1)
+      const v = (arr || [])[i] || 0
+      return Math.round(10 + (v / max) * 62)
     },
     dueLabel(t) {
       if (t.overdue) return `已过期 · ${fmtDateTime(t.dueAt)}`
@@ -325,6 +359,76 @@ export default {
   font-size: 24rpx;
   color: $ink-light;
   margin-top: 8rpx;
+}
+.mini-trend {
+  padding: 24rpx 28rpx 16rpx;
+}
+.mt-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.mt-title {
+  font-size: 27rpx;
+  font-weight: 700;
+  color: $ink;
+}
+.mt-sub {
+  font-size: 22rpx;
+  color: $ink-light;
+}
+.mt-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 14rpx;
+  margin-top: 20rpx;
+}
+.mt-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+.mt-bar-wrap {
+  height: 84rpx;
+  display: flex;
+  align-items: flex-end;
+  gap: 6rpx;
+}
+.mt-bar {
+  width: 14rpx;
+  border-radius: 6rpx 6rpx 0 0;
+  min-height: 10rpx;
+}
+.mt-leave {
+  background: $primary;
+}
+.mt-check {
+  background: $warn;
+}
+.mt-label {
+  font-size: 19rpx;
+  color: $ink-light;
+  margin-top: 8rpx;
+  white-space: nowrap;
+}
+.mt-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10rpx;
+  margin-top: 12rpx;
+}
+.mt-dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+}
+.mt-legend-text {
+  font-size: 20rpx;
+  color: $ink-light;
+  margin-right: 8rpx;
 }
 .greet-bell {
   position: relative;
