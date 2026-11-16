@@ -4,20 +4,20 @@
       <text class="batch-name">{{ batch.name }}</text>
       <text v-if="batch.remark" class="batch-remark">{{ batch.remark }}</text>
       <view class="stat-row">
-        <view class="stat-cell" style="background: rgba(220, 232, 220, 0.6)">
+        <view class="stat-cell" style="background: var(--mb-sage-tint)">
           <text class="stat-num">{{ batch.awardCount }}</text>
           <text class="stat-label">获奖人数</text>
         </view>
-        <view class="stat-cell" style="background: rgba(220, 232, 220, 0.65)">
+        <view class="stat-cell" style="background: var(--mb-sage-tint)">
           <text class="stat-num">{{ batch.receivedCount }}</text>
           <text class="stat-label">已交表</text>
         </view>
-        <view class="stat-cell" style="background: rgba(217, 164, 65, 0.16)">
+        <view class="stat-cell" style="background: var(--mb-warn-soft)">
           <text class="stat-num">{{ batch.awardCount - batch.receivedCount }}</text>
           <text class="stat-label">未交表</text>
         </view>
         <view class="ring-wrap">
-          <ProgressRing :size="140" :pct="progress" color="#8FB79B">
+          <ProgressRing :size="140" :pct="progress" color="var(--mb-matcha)">
             <text class="ring-pct">{{ progress }}%</text>
             <text class="ring-sub">已交 {{ batch.receivedCount }}/{{ batch.awardCount }}</text>
           </ProgressRing>
@@ -172,7 +172,7 @@ export default {
 .ring-pct {
   font-size: 30rpx;
   font-weight: 800;
-  color: #4e9b52;
+  color: var(--mb-ok);
 }
 .ring-sub {
   font-size: 20rpx;
@@ -190,10 +190,10 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #fff;
+  background: var(--mb-card-bg);
   border-radius: 24rpx;
   padding: 20rpx 24rpx;
-  box-shadow: 0 4rpx 18rpx rgba(122, 96, 76, 0.06);
+  box-shadow: 0 4rpx 18rpx var(--mb-shadow);
 }
 .switch-label {
   font-size: 25rpx;
@@ -205,7 +205,7 @@ export default {
   width: 76rpx;
   height: 42rpx;
   border-radius: 999rpx;
-  background: #E8E2D4;
+  background: var(--mb-line);
   position: relative;
   transition: background 0.2s ease;
 }
@@ -219,8 +219,8 @@ export default {
   width: 34rpx;
   height: 34rpx;
   border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15);
+  background: var(--mb-card-bg);
+  box-shadow: 0 2rpx 8rpx var(--mb-shadow);
   transition: left 0.2s ease;
 }
 .mini-switch.on .knob {
@@ -265,7 +265,7 @@ export default {
   flex-shrink: 0;
 }
 .pill-money {
-  background: rgba(220, 232, 220, 0.6);
-  color: #5B7A62;
+  background: var(--mb-sage-tint);
+  color: var(--mb-ink-light);
 }
 </style>

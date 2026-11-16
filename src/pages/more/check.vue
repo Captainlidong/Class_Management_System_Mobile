@@ -20,25 +20,25 @@
 
     <view v-if="result">
       <view class="card result-card">
-        <view class="result-group" style="background: rgba(220, 232, 220, 0.65)">
+        <view class="result-group" style="background: var(--mb-sage-tint)">
           <text class="result-title">✔ 已参与 {{ result.participated.length }}</text>
           <view class="result-names">
             <text v-for="n in result.participated" :key="'p' + n" class="result-name done">{{ n }}</text>
           </view>
         </view>
-        <view class="result-group" style="background: rgba(217, 164, 65, 0.16)">
+        <view class="result-group" style="background: var(--mb-warn-soft)">
           <text class="result-title">✖ 未参与 {{ result.absent.length }}</text>
           <view class="result-names">
             <text v-for="n in result.absent" :key="'a' + n" class="result-name undone">{{ n }}</text>
           </view>
         </view>
-        <view v-if="result.invalid && result.invalid.length" class="result-group" style="background: rgba(201, 111, 94, 0.14)">
+        <view v-if="result.invalid && result.invalid.length" class="result-group" style="background: var(--mb-berry-soft)">
           <text class="result-title">⚠ 无效名单 {{ result.invalid.length }}</text>
           <view class="result-names">
             <text v-for="n in result.invalid" :key="'i' + n" class="result-name invalid">{{ n }}</text>
           </view>
         </view>
-        <view v-if="result.duplicates && result.duplicates.length" class="result-group" style="background: rgba(220, 232, 220, 0.6)">
+        <view v-if="result.duplicates && result.duplicates.length" class="result-group" style="background: var(--mb-sage-tint)">
           <text class="result-title">🔁 重复 {{ result.duplicates.length }}</text>
           <view class="result-names">
             <text v-for="n in result.duplicates" :key="'d' + n" class="result-name dup">{{ n }}</text>
@@ -106,8 +106,8 @@ export default {
   width: 40rpx;
   height: 40rpx;
   border-radius: 50%;
-  border: 2rpx solid #E8E2D4;
-  color: #fff;
+  border: 2rpx solid var(--mb-line);
+  color: var(--mb-on-primary);
   font-size: 24rpx;
   display: flex;
   align-items: center;
@@ -147,18 +147,18 @@ export default {
   font-size: 25rpx;
   padding: 8rpx 22rpx;
   border-radius: 999rpx;
-  background: #fff;
+  background: var(--mb-card-bg);
   color: $ink;
   font-weight: 500;
 }
 .result-name.done {
-  color: #4e9b52;
+  color: var(--mb-ok);
 }
 .result-name.undone {
-  color: #A2681F;
+  color: var(--mb-warn-text);
 }
 .result-name.invalid,
 .result-name.dup {
-  color: #c26b83;
+  color: var(--mb-berry);
 }
 </style>

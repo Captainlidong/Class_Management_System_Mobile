@@ -20,13 +20,13 @@
         </view>
 
         <view v-if="expandedId === r.id" class="record-body">
-          <view class="result-group" style="background: rgba(220, 232, 220, 0.65)">
+          <view class="result-group" style="background: var(--mb-sage-tint)">
             <text class="result-title">✔ 已参与 {{ detail.participated.length }}</text>
             <view class="result-names">
               <text v-for="n in detail.participated" :key="'p' + n" class="result-name done">{{ n }}</text>
             </view>
           </view>
-          <view class="result-group" style="background: rgba(217, 164, 65, 0.16)">
+          <view class="result-group" style="background: var(--mb-warn-soft)">
             <text class="result-title">✖ 未参与 {{ detail.absent.length }}</text>
             <view class="result-names">
               <text v-for="n in detail.absent" :key="'a' + n" class="result-name undone">{{ n }}</text>
@@ -174,15 +174,15 @@ export default {
   font-size: 25rpx;
   padding: 8rpx 22rpx;
   border-radius: 999rpx;
-  background: #fff;
+  background: var(--mb-card-bg);
   color: $ink;
   font-weight: 500;
 }
 .result-name.done {
-  color: #4e9b52;
+  color: var(--mb-ok);
 }
 .result-name.undone {
-  color: #A2681F;
+  color: var(--mb-warn-text);
 }
 .record-actions {
   display: flex;

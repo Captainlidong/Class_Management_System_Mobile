@@ -87,7 +87,7 @@ export default {
 .lock-banner {
   font-size: 24rpx;
   color: $ink-light;
-  background: #F6F1E6;
+  background: var(--mb-cream-2);
   border-radius: 16rpx;
   padding: 16rpx 22rpx;
   margin-bottom: 8rpx;

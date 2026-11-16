@@ -192,7 +192,7 @@ export default {
   display: block;
   font-size: 25rpx;
   color: $ink;
-  background: #F6F1E6;
+  background: var(--mb-cream-2);
   border-radius: 16rpx;
   padding: 14rpx 20rpx;
   margin-top: 14rpx;
@@ -205,7 +205,7 @@ export default {
 }
 .leave-action {
   font-size: 25rpx;
-  color: #3E5C4B;
+  color: var(--mb-primary);
   font-weight: 600;
 }
 .leave-action.danger {
@@ -219,12 +219,12 @@ export default {
   height: 96rpx;
   border-radius: 50%;
   background: $primary;
-  color: #fff;
+  color: var(--mb-on-primary);
   font-size: 44rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10rpx 30rpx rgba(62, 92, 75, 0.1);
+  box-shadow: 0 10rpx 30rpx var(--mb-primary-soft);
   z-index: 900;
 }
 </style>

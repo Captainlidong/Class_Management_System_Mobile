@@ -177,8 +177,8 @@ export default {
   display: inline-flex;
   align-items: center;
   gap: 8rpx;
-  background: #dce8dc;
-  color: #2f4838;
+  background: var(--mb-sage-card);
+  color: var(--mb-primary-deep);
   border-radius: 999rpx;
   padding: 10rpx 22rpx;
   font-size: 26rpx;
@@ -186,12 +186,12 @@ export default {
   margin: 6rpx 10rpx 6rpx 0;
 }
 .member-chip.hit {
-  background: #e8b4a0;
-  color: #7a3d2b;
+  background: var(--mb-peach);
+  color: var(--mb-berry);
 }
 .member-no {
   font-size: 22rpx;
-  color: #6d8577;
+  color: var(--mb-ink-light);
   font-weight: 500;
 }
 </style>

@@ -23,7 +23,7 @@
           <view class="progress-bar">
             <view
               class="progress-inner"
-              :style="{ width: progressPct(t) + '%', background: t.received >= t.total && t.total > 0 ? '#8FB79B' : '#3E5C4B' }"
+              :style="{ width: progressPct(t) + '%', background: t.received >= t.total && t.total > 0 ? 'var(--mb-matcha)' : 'var(--mb-primary)' }"
             ></view>
           </view>
           <text class="task-progress-text" :class="{ complete: t.received >= t.total && t.total > 0 }">
@@ -106,7 +106,7 @@ export default {
   font-weight: 700;
   padding: 8rpx 18rpx;
   border-radius: 999rpx;
-  color: #fff;
+  color: var(--mb-on-primary);
 }
 .tag-collect {
   background: $matcha;
@@ -141,7 +141,7 @@ export default {
   flex: 1;
   height: 14rpx;
   border-radius: 999rpx;
-  background: #f3eae0;
+  background: var(--mb-sage-light);
   overflow: hidden;
 }
 .progress-inner {
@@ -152,11 +152,11 @@ export default {
 .task-progress-text {
   flex-shrink: 0;
   font-size: 25rpx;
-  color: #A2681F;
+  color: var(--mb-warn-text);
   font-weight: 600;
 }
 .task-progress-text.complete {
-  color: #4e9b52;
+  color: var(--mb-ok);
 }
 .task-meta-row {
   display: flex;
@@ -168,7 +168,7 @@ export default {
   color: $ink-light;
 }
 .task-deadline.passed {
-  color: #C96F5E;
+  color: var(--mb-berry);
   font-weight: 600;
 }
 .task-created {

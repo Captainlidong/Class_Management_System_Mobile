@@ -4,8 +4,8 @@ export default {
   props: {
     size: { type: Number, default: 150 },   // rpx
     pct: { type: Number, default: 0 },      // 0-100
-    color: { type: String, default: '#3E5C4B' },
-    track: { type: String, default: '#F3EAE0' },
+    color: { type: String, default: 'var(--mb-primary)' },
+    track: { type: String, default: 'var(--mb-sage-card)' },
     holePercent: { type: Number, default: 66 } // 中空占比
   },
   computed: {
@@ -47,7 +47,7 @@ export default {
   transition: background 0.4s ease;
 }
 .ring-hole {
-  background: #fff;
+  background: var(--mb-card-bg);
   border-radius: 50%;
   display: flex;
   flex-direction: column;

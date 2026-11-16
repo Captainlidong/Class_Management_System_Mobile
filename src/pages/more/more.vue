@@ -59,6 +59,12 @@
         <text class="menu-extra"></text>
         <text class="menu-arrow">›</text>
       </view>
+      <view class="menu-cell" @tap="switchTheme">
+        <view class="menu-icon"><AppIcon name="moon" :size="22" /></view>
+        <text class="menu-name">深色模式</text>
+        <text class="menu-extra">{{ themeLabel }}</text>
+        <text class="menu-arrow">›</text>
+      </view>
       <view class="menu-cell last" @tap="go('/pages/more/history')">
         <view class="menu-icon"><AppIcon name="book" :size="22" /></view>
         <text class="menu-name">筛查历史</text>
@@ -88,16 +94,31 @@ import TabBar from '../../components/TabBar.vue'
 import AppIcon from '../../components/AppIcon.vue'
 import CatWave from '../../components/cats/CatWave.vue'
 import { useAuthStore } from '../../stores/auth'
+import { useThemeStore } from '../../stores/theme'
 import { studentsList, todoList, notificationList, termList, termSwitch } from '../../api'
 
 export default {
   components: { TabBar, AppIcon, CatWave },
   data() {
-    return { studentsCount: 0, pendingCount: 0, unread: 0, termName: '', terms: [], version: __APP_VERSION__ }
+    return {
+      studentsCount: 0,
+      pendingCount: 0,
+      unread: 0,
+      termName: '',
+      terms: [],
+      version: __APP_VERSION__
+    }
   },
   computed: {
     auth() {
       return useAuthStore()
+    },
+    theme() {
+      return useThemeStore()
+    },
+    themeLabel() {
+      const map = { auto: '跟随系统', light: '浅色', dark: '深色' }
+      return map[this.theme.pref] || '跟随系统'
     }
   },
   onShow() {
@@ -148,6 +169,17 @@ export default {
           } catch (e) {
             /* 拦截器已提示 */
           }
+        }
+      })
+    },
+    switchTheme() {
+      const labels = ['跟随系统', '浅色', '深色']
+      const keys = ['auto', 'light', 'dark']
+      uni.showActionSheet({
+        itemList: labels,
+        success: (res) => {
+          this.theme.setPref(keys[res.tapIndex])
+          uni.showToast({ title: '已切换为' + labels[res.tapIndex], icon: 'none' })
         }
       })
     },

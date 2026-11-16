@@ -100,11 +100,11 @@ export default {
 }
 .batch-meta-item {
   font-size: 25rpx;
-  color: #A2681F;
+  color: var(--mb-warn-text);
   font-weight: 600;
 }
 .batch-meta-item.complete {
-  color: #4e9b52;
+  color: var(--mb-ok);
 }
 .level-tags {
   display: flex;
@@ -114,8 +114,8 @@ export default {
 }
 .level-tag {
   font-size: 22rpx;
-  color: #5B7A62;
-  background: rgba(220, 232, 220, 0.6);
+  color: var(--mb-ink-light);
+  background: var(--mb-sage-tint);
   border-radius: 999rpx;
   padding: 6rpx 18rpx;
 }

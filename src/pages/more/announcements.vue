@@ -169,16 +169,16 @@ export default {
   font-size: 21rpx;
   padding: 4rpx 14rpx;
   border-radius: 999rpx;
-  color: #A2681F;
-  background: rgba(217, 164, 65, 0.16);
+  color: var(--mb-warn-text);
+  background: var(--mb-warn-soft);
 }
 .ann-tag.pinned {
-  color: #5B7A62;
-  background: rgba(220, 232, 220, 0.6);
+  color: var(--mb-ink-light);
+  background: var(--mb-sage-tint);
 }
 .ann-tag.sent {
-  color: #4e9b52;
-  background: rgba(220, 232, 220, 0.65);
+  color: var(--mb-ok);
+  background: var(--mb-sage-tint);
 }
 .ann-arrow {
   font-size: 26rpx;
@@ -215,7 +215,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #F6F1E6;
+  background: var(--mb-cream-2);
   border-radius: 16rpx;
   padding: 14rpx 20rpx;
   margin-bottom: 10rpx;
@@ -230,7 +230,7 @@ export default {
 }
 .ann-file-down {
   font-size: 24rpx;
-  color: #3E5C4B;
+  color: var(--mb-primary);
   font-weight: 600;
   flex-shrink: 0;
   margin-left: 14rpx;
@@ -242,7 +242,7 @@ export default {
 }
 .ann-action {
   font-size: 25rpx;
-  color: #3E5C4B;
+  color: var(--mb-primary);
   font-weight: 600;
 }
 .ann-action.danger {

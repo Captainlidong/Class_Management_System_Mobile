@@ -1,5 +1,6 @@
 <script>
 import { useAuthStore } from './stores/auth'
+import { useThemeStore } from './stores/theme'
 
 export default {
   onLaunch() {
@@ -9,6 +10,8 @@ export default {
     return
     // #endif
     const auth = useAuthStore()
+    const theme = useThemeStore()
+    theme.init()
     auth.bindUnauthorized()
     auth.refresh()
   }
@@ -60,7 +63,7 @@ page {
   color: $primary-deep;
 }
 .btn-danger-ghost {
-  background: rgba(201, 111, 94, 0.14);
+  background: var(--mb-berry-soft);
   color: $berry;
 }
 .btn[disabled] {
@@ -81,13 +84,13 @@ page {
   color: $primary-deep;
 }
 .pill-undone {
-  background: rgba(217, 164, 65, 0.18);
+  background: $warn-soft;
   color: $warn;
 }
 
 /* —— 通用输入：奶油内衬 —— */
 .field-input {
-  background: $cream-bg;
+  background: $cream-2;
   border-radius: 20rpx;
   padding: 20rpx 24rpx;
   font-size: 28rpx;

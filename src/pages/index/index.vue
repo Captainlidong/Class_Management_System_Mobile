@@ -525,11 +525,11 @@ export default {
   border-radius: 999rpx;
 }
 .badge-overdue {
-  background: rgba(201, 111, 94, 0.16);
+  background: var(--mb-berry-soft);
   color: $berry;
 }
 .badge-today {
-  background: rgba(217, 164, 65, 0.2);
+  background: var(--mb-warn-soft);
   color: $warn;
 }
 .badge-normal {
@@ -586,7 +586,7 @@ export default {
 }
 .hero-unit {
   font-size: 22rpx;
-  color: rgba(47, 59, 51, 0.62);
+  color: var(--mb-overlay);
 }
 .hero-btn {
   margin-top: 14rpx;
@@ -679,15 +679,15 @@ export default {
   color: $primary-deep;
 }
 .quick-sage {
-  background: rgba(143, 183, 155, 0.24);
+  background: var(--mb-sage-tint);
   color: $primary-deep;
 }
 .quick-butter {
-  background: rgba(217, 164, 65, 0.18);
+  background: var(--mb-warn-soft);
   color: $warn;
 }
 .quick-peach {
-  background: rgba(201, 111, 94, 0.14);
+  background: var(--mb-berry-soft);
   color: $berry;
 }
 .quick-label {

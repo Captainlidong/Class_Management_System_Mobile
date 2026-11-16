@@ -167,10 +167,10 @@ export default {
 }
 .kind-cell.active {
   border-color: $primary;
-  background: rgba(62, 92, 75, 0.1);
+  background: var(--mb-primary-soft);
 }
 .kind-icon {
-  color: #3E5C4B;
+  color: var(--mb-primary);
   display: flex;
   justify-content: center;
 }
@@ -190,7 +190,7 @@ export default {
   justify-content: space-between;
 }
 .placeholder {
-  color: #B0B4AC;
+  color: var(--mb-ink-light);
 }
 .picker-clear {
   color: $ink-light;
@@ -215,7 +215,7 @@ export default {
 }
 .range-link {
   font-size: 25rpx;
-  color: #3E5C4B;
+  color: var(--mb-primary);
   font-weight: 600;
 }
 .range-hint {
@@ -247,8 +247,8 @@ export default {
   width: 40rpx;
   height: 40rpx;
   border-radius: 50%;
-  border: 2rpx solid #E8E2D4;
-  color: #fff;
+  border: 2rpx solid var(--mb-line);
+  color: var(--mb-on-primary);
   font-size: 24rpx;
   display: flex;
   align-items: center;

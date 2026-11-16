@@ -182,8 +182,8 @@ export default {
   background: $card-bg;
   border-radius: 40rpx;
   padding: 44rpx 36rpx;
-  border: 1rpx solid rgba(232, 226, 212, 0.7);
-  box-shadow: 0 14rpx 50rpx rgba(122, 96, 76, 0.08);
+  border: 1rpx solid var(--mb-line-soft);
+  box-shadow: 0 14rpx 50rpx var(--mb-shadow);
   margin-top: 36rpx;
 }
 .field {

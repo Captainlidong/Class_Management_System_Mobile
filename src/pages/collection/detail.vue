@@ -12,20 +12,20 @@
         截止 {{ fmtDateTime(task.deadline) }}{{ isPassed(task.deadline) ? '（已过期）' : '' }}
       </text>
       <view class="stat-row">
-        <view class="stat-cell" style="background: rgba(220, 232, 220, 0.6)">
+        <view class="stat-cell" style="background: var(--mb-sage-tint)">
           <text class="stat-num">{{ entries.length }}</text>
           <text class="stat-label">{{ kt.statTotal }}</text>
         </view>
-        <view class="stat-cell" style="background: rgba(220, 232, 220, 0.65)">
+        <view class="stat-cell" style="background: var(--mb-sage-tint)">
           <text class="stat-num">{{ receivedCount }}</text>
           <text class="stat-label">{{ kt.done }}</text>
         </view>
-        <view class="stat-cell" style="background: rgba(217, 164, 65, 0.16)">
+        <view class="stat-cell" style="background: var(--mb-warn-soft)">
           <text class="stat-num">{{ entries.length - receivedCount }}</text>
           <text class="stat-label">{{ kt.undone }}</text>
         </view>
         <view class="ring-wrap">
-          <ProgressRing :size="140" :pct="progress" color="#3E5C4B">
+          <ProgressRing :size="140" :pct="progress" color="var(--mb-primary)">
             <text class="ring-pct">{{ progress }}%</text>
             <text class="ring-sub">{{ kt.done }} {{ receivedCount }}/{{ entries.length }}</text>
           </ProgressRing>
@@ -421,7 +421,7 @@ export default {
   font-weight: 700;
   padding: 8rpx 18rpx;
   border-radius: 999rpx;
-  color: #fff;
+  color: var(--mb-on-primary);
 }
 .tag-collect {
   background: $matcha;
@@ -441,7 +441,7 @@ export default {
   margin-bottom: 20rpx;
 }
 .task-deadline.passed {
-  color: #C96F5E;
+  color: var(--mb-berry);
   font-weight: 600;
 }
 .stat-row {
@@ -476,7 +476,7 @@ export default {
 .ring-pct {
   font-size: 30rpx;
   font-weight: 800;
-  color: #3E5C4B;
+  color: var(--mb-primary);
 }
 .ring-sub {
   font-size: 20rpx;
@@ -493,10 +493,10 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #fff;
+  background: var(--mb-card-bg);
   border-radius: 24rpx;
   padding: 20rpx 24rpx;
-  box-shadow: 0 4rpx 18rpx rgba(122, 96, 76, 0.06);
+  box-shadow: 0 4rpx 18rpx var(--mb-shadow);
 }
 .switch-label {
   font-size: 25rpx;
@@ -508,7 +508,7 @@ export default {
   width: 76rpx;
   height: 42rpx;
   border-radius: 999rpx;
-  background: #E8E2D4;
+  background: var(--mb-line);
   position: relative;
   transition: background 0.2s ease;
   flex-shrink: 0;
@@ -523,8 +523,8 @@ export default {
   width: 34rpx;
   height: 34rpx;
   border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15);
+  background: var(--mb-card-bg);
+  box-shadow: 0 2rpx 8rpx var(--mb-shadow);
   transition: left 0.2s ease;
 }
 .mini-switch.on .knob {
@@ -613,26 +613,26 @@ export default {
   text-align: center;
   font-size: 27rpx;
   font-weight: 700;
-  box-shadow: 0 8rpx 30rpx rgba(122, 96, 76, 0.16);
+  box-shadow: 0 8rpx 30rpx var(--mb-shadow);
 }
 .action-btn.primary {
   flex: 1.4;
   background: $primary;
-  color: #fff;
+  color: var(--mb-on-primary);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .action-btn.ghost {
   flex: 1;
-  background: rgba(255, 255, 255, 0.95);
-  color: #3E5C4B;
+  background: var(--mb-veil);
+  color: var(--mb-primary);
 }
 
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(60, 45, 35, 0.42);
+  background: var(--mb-overlay);
   /* 低于 uni-modal(999)/uni-toast，保证二次确认弹窗能盖在弹层之上 */
   z-index: 998;
   display: flex;
@@ -640,7 +640,7 @@ export default {
 }
 .popup {
   width: 100%;
-  background: #fff;
+  background: var(--mb-card-bg);
   border-radius: 40rpx 40rpx 0 0;
   padding: 36rpx 32rpx calc(30rpx + env(safe-area-inset-bottom));
   box-sizing: border-box;
@@ -665,7 +665,7 @@ export default {
 }
 .popup-tool-link {
   font-size: 25rpx;
-  color: #3E5C4B;
+  color: var(--mb-primary);
   font-weight: 600;
 }
 .popup-count {
@@ -694,17 +694,17 @@ export default {
   font-size: 23rpx;
 }
 .st-done {
-  color: #4e9b52;
+  color: var(--mb-ok);
 }
 .st-undone {
-  color: #A2681F;
+  color: var(--mb-warn-text);
 }
 .check-circle {
   width: 40rpx;
   height: 40rpx;
   border-radius: 50%;
-  border: 2rpx solid #E8E2D4;
-  color: #fff;
+  border: 2rpx solid var(--mb-line);
+  color: var(--mb-on-primary);
   font-size: 24rpx;
   display: flex;
   align-items: center;

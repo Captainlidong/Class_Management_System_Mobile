@@ -244,11 +244,11 @@ export default {
   width: auto;
 }
 .edit-banner {
-  background: rgba(62, 92, 75, 0.1);
+  background: var(--mb-primary-soft);
   border-radius: 18rpx;
   padding: 18rpx 22rpx;
   font-size: 26rpx;
-  color: #3E5C4B;
+  color: var(--mb-primary);
   font-weight: 600;
   margin-top: 6rpx;
 }
@@ -257,6 +257,6 @@ export default {
   width: auto;
 }
 .placeholder {
-  color: #B0B4AC;
+  color: var(--mb-ink-light);
 }
 </style>

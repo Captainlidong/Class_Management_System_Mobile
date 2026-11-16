@@ -100,14 +100,14 @@ export default {
 }
 .read-all {
   font-size: 25rpx;
-  color: #3e5c4b;
+  color: var(--mb-primary);
   font-weight: 600;
 }
 .notify-card {
   padding: 26rpx 28rpx;
 }
 .notify-card.unread {
-  background: #fbf8f0;
+  background: var(--mb-cream-2);
 }
 .notify-head {
   display: flex;

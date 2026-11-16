@@ -27,32 +27,54 @@ page {
   --mb-veil: rgba(255, 255, 255, 0.9);
   --mb-on-primary: #FFFFFF;
   --mb-shadow: rgba(60, 45, 35, 0.1);
+  /* —— tint 变量（清扫页面 rgba 淡底用） —— */
+  --mb-warn-soft: rgba(217, 164, 65, 0.18);
+  --mb-berry-soft: rgba(201, 111, 94, 0.14);
+  --mb-sage-tint: rgba(143, 183, 155, 0.24);
+  --mb-cream-2: #FBF7EE;
+  --mb-success-bg: #E9F0E9;
+  --mb-line-soft: rgba(232, 226, 212, 0.7);
+  --mb-overlay: rgba(60, 45, 35, 0.42);
+  --mb-ok: #4E9B52;
+  --mb-warn-text: #A2681F;
+  --mb-berry-text: #A8503F;
 }
 
-/* —— CSS 变量：深色（跟随系统） —— */
-@media (prefers-color-scheme: dark) {
-  :root,
-  page {
-    --mb-cream-bg: #1A211D;
-    --mb-card-bg: #242E28;
-    --mb-sage-card: #2A362F;
-    --mb-sage-light: #33413A;
-    --mb-ink: #E8EDE9;
-    --mb-ink-light: #93A398;
-    --mb-line: #39443D;
-    --mb-primary: #7FB08F;
-    --mb-primary-deep: #9BC4A9;
-    --mb-primary-soft: rgba(127, 176, 143, 0.18);
-    --mb-matcha: #7FB08F;
-    --mb-peach: #C98F7C;
-    --mb-butter: #C9B47B;
-    --mb-taro: #3A4740;
-    --mb-berry: #D9756B;
-    --mb-warn: #E0B455;
-    --mb-veil: rgba(36, 46, 40, 0.92);
-    --mb-on-primary: #14201A;
-    --mb-shadow: rgba(0, 0, 0, 0.35);
-  }
+/* —— CSS 变量：深色（由 theme store 按用户偏好挂 html.mb-dark 切换） ——
+ * 选择器要落到 page/uni-page-body 级：uni.scss 会内联进每个组件样式，
+ * page 级的浅色定义比 html 级的深色更近，必须同级覆盖才能赢。 */
+html.mb-dark,
+html.mb-dark page,
+page.mb-dark {
+  --mb-cream-bg: #1A211D;
+  --mb-card-bg: #242E28;
+  --mb-sage-card: #2A362F;
+  --mb-sage-light: #33413A;
+  --mb-ink: #E8EDE9;
+  --mb-ink-light: #93A398;
+  --mb-line: #39443D;
+  --mb-primary: #7FB08F;
+  --mb-primary-deep: #9BC4A9;
+  --mb-primary-soft: rgba(127, 176, 143, 0.18);
+  --mb-matcha: #7FB08F;
+  --mb-peach: #C98F7C;
+  --mb-butter: #C9B47B;
+  --mb-taro: #3A4740;
+  --mb-berry: #D9756B;
+  --mb-warn: #E0B455;
+  --mb-veil: rgba(36, 46, 40, 0.92);
+  --mb-on-primary: #14201A;
+  --mb-shadow: rgba(0, 0, 0, 0.35);
+  --mb-warn-soft: rgba(224, 180, 85, 0.16);
+  --mb-berry-soft: rgba(217, 117, 107, 0.16);
+  --mb-sage-tint: rgba(127, 176, 143, 0.18);
+  --mb-cream-2: #222B26;
+  --mb-success-bg: #2A362F;
+  --mb-line-soft: rgba(232, 226, 212, 0.12);
+  --mb-overlay: rgba(0, 0, 0, 0.6);
+  --mb-ok: #7FB08F;
+  --mb-warn-text: #E0B455;
+  --mb-berry-text: #D9756B;
 }
 
 /* —— 底色与卡片 —— */
@@ -81,6 +103,17 @@ $butter: var(--mb-butter);             // 暖赭黄（待办/提醒底）
 $taro: var(--mb-taro);                 // 浅鼠尾草（标签底）
 $berry: var(--mb-berry);               // 陶土红（危险/删除）
 $warn: var(--mb-warn);                 // 暖赭（到期提醒文字）
+
+/* —— 状态淡底 / 辅助（清扫页面硬编码用） —— */
+$warn-soft: var(--mb-warn-soft);       // 到期淡底
+$berry-soft: var(--mb-berry-soft);     // 危险淡底
+$sage-tint: var(--mb-sage-tint);       // 鼠尾草淡底
+$cream-2: var(--mb-cream-2);           // 次级奶油底
+$success-bg: var(--mb-success-bg);     // 成功淡底
+$line-soft: var(--mb-line-soft);       // 更淡分隔线
+$veil: var(--mb-veil);                 // 半透明浮层底
+$on-primary: var(--mb-on-primary);     // 主色底上的文字
+$shadow: var(--mb-shadow);             // 阴影色
 
 /* —— 圆角 —— */
 $radius-card: 32rpx;

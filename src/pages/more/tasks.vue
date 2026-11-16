@@ -125,8 +125,8 @@ export default {
 }
 .task-badge {
   font-size: 22rpx;
-  color: #3e5c4b;
-  background: #dce8dc;
+  color: var(--mb-primary);
+  background: var(--mb-sage-card);
   border-radius: 999rpx;
   padding: 4rpx 16rpx;
   font-weight: 600;

@@ -268,8 +268,8 @@ export default {
   width: 44rpx;
   height: 44rpx;
   border-radius: 50%;
-  border: 2rpx solid #E8E2D4;
-  color: #fff;
+  border: 2rpx solid var(--mb-line);
+  color: var(--mb-on-primary);
   font-size: 26rpx;
   display: flex;
   align-items: center;
@@ -328,8 +328,8 @@ export default {
 .cate-chip {
   display: inline-flex;
   font-size: 21rpx;
-  color: #3e5c4b;
-  background: #dce8dc;
+  color: var(--mb-primary);
+  background: var(--mb-sage-card);
   border-radius: 999rpx;
   padding: 2rpx 16rpx;
   font-weight: 600;
@@ -351,7 +351,7 @@ export default {
   margin-top: 6rpx;
 }
 .todo-due.overdue {
-  color: #C96F5E;
+  color: var(--mb-berry);
   font-weight: 600;
 }
 .todo-actions {
@@ -362,7 +362,7 @@ export default {
 }
 .todo-action {
   font-size: 25rpx;
-  color: #3E5C4B;
+  color: var(--mb-primary);
   font-weight: 600;
 }
 .todo-action.danger {
@@ -376,18 +376,18 @@ export default {
   height: 96rpx;
   border-radius: 50%;
   background: $primary;
-  color: #fff;
+  color: var(--mb-on-primary);
   font-size: 44rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10rpx 30rpx rgba(62, 92, 75, 0.1);
+  box-shadow: 0 10rpx 30rpx var(--mb-primary-soft);
   z-index: 900;
 }
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(60, 45, 35, 0.42);
+  background: var(--mb-overlay);
   /* 低于 uni-modal(999)，保证确认弹窗能盖在弹层上 */
   z-index: 998;
   display: flex;
@@ -395,7 +395,7 @@ export default {
 }
 .popup {
   width: 100%;
-  background: #fff;
+  background: var(--mb-card-bg);
   border-radius: 40rpx 40rpx 0 0;
   padding: 36rpx 32rpx calc(30rpx + env(safe-area-inset-bottom));
   box-sizing: border-box;
@@ -436,7 +436,7 @@ export default {
   flex-shrink: 0;
 }
 .placeholder {
-  color: #B0B4AC;
+  color: var(--mb-ink-light);
 }
 .popup-hint {
   display: block;
