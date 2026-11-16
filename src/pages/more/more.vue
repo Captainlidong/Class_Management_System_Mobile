@@ -86,6 +86,23 @@
 
     <view class="tabbar-spacer"></view>
     <TabBar current="more" />
+
+    <SheetPicker
+      :visible="themeSheet"
+      title="深色模式"
+      :items="themeItems"
+      :selected="theme.pref"
+      @close="themeSheet = false"
+      @select="onThemePick"
+    />
+    <SheetPicker
+      :visible="termSheet"
+      title="学期切换"
+      :items="termItems"
+      :selected="currentTermId"
+      @close="termSheet = false"
+      @select="onTermPick"
+    />
   </view>
 </template>
 
@@ -93,12 +110,13 @@
 import TabBar from '../../components/TabBar.vue'
 import AppIcon from '../../components/AppIcon.vue'
 import CatWave from '../../components/cats/CatWave.vue'
+import SheetPicker from '../../components/SheetPicker.vue'
 import { useAuthStore } from '../../stores/auth'
 import { useThemeStore } from '../../stores/theme'
 import { studentsList, todoList, notificationList, termList, termSwitch } from '../../api'
 
 export default {
-  components: { TabBar, AppIcon, CatWave },
+  components: { TabBar, AppIcon, CatWave, SheetPicker },
   data() {
     return {
       studentsCount: 0,
@@ -106,6 +124,8 @@ export default {
       unread: 0,
       termName: '',
       terms: [],
+      themeSheet: false,
+      termSheet: false,
       version: __APP_VERSION__
     }
   },
@@ -119,6 +139,24 @@ export default {
     themeLabel() {
       const map = { auto: '跟随系统', light: '浅色', dark: '深色' }
       return map[this.theme.pref] || '跟随系统'
+    },
+    themeItems() {
+      return [
+        { key: 'auto', label: '跟随系统', icon: 'sparkle', desc: '随手机的深色模式自动切换' },
+        { key: 'light', label: '浅色', icon: 'sun', desc: '奶油底 × 深林绿，白天更清爽' },
+        { key: 'dark', label: '深色', icon: 'moon', desc: '夜里看不刺眼，手动指定最可靠' }
+      ]
+    },
+    currentTermId() {
+      const cur = this.terms.find((t) => t.current)
+      return cur ? cur.id : ''
+    },
+    termItems() {
+      return this.terms.map((t) => ({
+        key: t.id,
+        label: t.name,
+        extra: t.current ? '当前' : t.archived ? '已归档' : ''
+      }))
     }
   },
   onShow() {
@@ -158,30 +196,26 @@ export default {
         uni.showToast({ title: '暂无学期数据', icon: 'none' })
         return
       }
-      uni.showActionSheet({
-        itemList: this.terms.map((t) => t.name + (t.archived ? '（已归档）' : '')),
-        success: async (res) => {
-          const target = this.terms[res.tapIndex]
-          if (!target || target.current) return
-          try {
-            await termSwitch(target.id)
-            uni.reLaunch({ url: '/pages/index/index' })
-          } catch (e) {
-            /* 拦截器已提示 */
-          }
-        }
-      })
+      this.termSheet = true
+    },
+    async onTermPick(it) {
+      this.termSheet = false
+      if (!it || it.key === this.currentTermId) return
+      try {
+        await termSwitch(it.key)
+        uni.reLaunch({ url: '/pages/index/index' })
+      } catch (e) {
+        /* 拦截器已提示 */
+      }
     },
     switchTheme() {
-      const labels = ['跟随系统', '浅色', '深色']
-      const keys = ['auto', 'light', 'dark']
-      uni.showActionSheet({
-        itemList: labels,
-        success: (res) => {
-          this.theme.setPref(keys[res.tapIndex])
-          uni.showToast({ title: '已切换为' + labels[res.tapIndex], icon: 'none' })
-        }
-      })
+      this.themeSheet = true
+    },
+    onThemePick(it) {
+      this.themeSheet = false
+      if (!it || it.key === this.theme.pref) return
+      this.theme.setPref(it.key)
+      uni.showToast({ title: '已切换为' + it.label, icon: 'none' })
     },
     go(url) {
       uni.navigateTo({ url })
