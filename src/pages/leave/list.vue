@@ -58,6 +58,18 @@
     <view class="fab" @tap="goEdit"><AppIcon name="plus" :size="30" /></view>
     <view class="tabbar-spacer"></view>
     <TabBar current="leave" />
+
+    <ConfirmDialog
+      :visible="dlg.visible"
+      :title="dlg.title"
+      :content="dlg.content"
+      :danger="dlg.danger"
+      :confirm-text="dlg.confirmText"
+      :cancel-text="dlg.cancelText"
+      :show-cancel="dlg.showCancel"
+      @confirm="onDlgConfirm"
+      @close="onDlgClose"
+    />
   </view>
 </template>
 
@@ -65,13 +77,16 @@
 import TabBar from '../../components/TabBar.vue'
 import AppIcon from '../../components/AppIcon.vue'
 import EmptyState from '../../components/EmptyState.vue'
+import ConfirmDialog from '../../components/ConfirmDialog.vue'
+import confirmDialog from '../../mixins/confirmDialog'
 import { leaveList, leaveClose, leaveReopen, leaveDelete } from '../../api'
 import { fmtDateTime } from '../../utils/format'
 
 const TYPE_MAP = { sick: '病假', personal: '事假', official: '公假', other: '其他' }
 
 export default {
-  components: { TabBar, EmptyState, AppIcon },
+  components: { TabBar, EmptyState, AppIcon, ConfirmDialog },
+  mixins: [confirmDialog],
   data() {
     return {
       status: '',
@@ -102,44 +117,31 @@ export default {
       }
     },
     closeLeave(l) {
-      uni.showModal({
-        title: '销假',
-        content: `为 ${l.name} 办理销假？`,
-        success: async (res) => {
-          if (!res.confirm) return
-          try {
-            await leaveClose(l.id)
-            uni.showToast({ title: '已销假', icon: 'none' })
-            this.load()
-          } catch (e) {
-            /* 拦截器已提示 */
-          }
+      this.confirm({ title: '销假', content: `为 ${l.name} 办理销假？`, confirmText: '销假' }, async () => {
+        try {
+          await leaveClose(l.id)
+          uni.showToast({ title: '已销假', icon: 'none' })
+          this.load()
+        } catch (e) {
+          /* 拦截器已提示 */
         }
       })
     },
     reopenLeave(l) {
-      uni.showModal({
-        title: '重新打开',
-        content: `将 ${l.name} 的请假重新打开？`,
-        success: async (res) => {
-          if (!res.confirm) return
-          try {
-            await leaveReopen(l.id)
-            uni.showToast({ title: '已重新打开', icon: 'none' })
-            this.load()
-          } catch (e) {
-            /* 拦截器已提示 */
-          }
+      this.confirm({ title: '重新打开', content: `将 ${l.name} 的请假重新打开？`, confirmText: '重新打开' }, async () => {
+        try {
+          await leaveReopen(l.id)
+          uni.showToast({ title: '已重新打开', icon: 'none' })
+          this.load()
+        } catch (e) {
+          /* 拦截器已提示 */
         }
       })
     },
     deleteLeave(l) {
-      uni.showModal({
-        title: '删除记录',
-        content: `删除 ${l.name} 的请假记录？不可恢复。`,
-        confirmColor: '#C96F5E',
-        success: async (res) => {
-          if (!res.confirm) return
+      this.confirm(
+        { title: '删除记录', content: `删除 ${l.name} 的请假记录？不可恢复。`, confirmText: '删除', danger: true },
+        async () => {
           try {
             await leaveDelete(l.id)
             uni.showToast({ title: '已删除', icon: 'none' })
@@ -148,7 +150,7 @@ export default {
             /* 拦截器已提示 */
           }
         }
-      })
+      )
     },
     editLeave(l) {
       uni.navigateTo({ url: `/pages/leave/edit?id=${l.id}` })

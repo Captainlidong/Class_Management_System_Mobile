@@ -137,6 +137,26 @@
         <button class="btn btn-primary popup-btn" :disabled="!addIds.length" @tap="saveAddPersons">添加所选</button>
       </view>
     </view>
+
+    <SheetPicker
+      :visible="moreSheet"
+      title="更多操作"
+      :items="moreItems"
+      :selected="''"
+      @close="moreSheet = false"
+      @select="onMorePick"
+    />
+    <ConfirmDialog
+      :visible="dlg.visible"
+      :title="dlg.title"
+      :content="dlg.content"
+      :danger="dlg.danger"
+      :confirm-text="dlg.confirmText"
+      :cancel-text="dlg.cancelText"
+      :show-cancel="dlg.showCancel"
+      @confirm="onDlgConfirm"
+      @close="onDlgClose"
+    />
   </view>
 </template>
 
@@ -144,12 +164,16 @@
 import ProgressRing from '../../components/ProgressRing.vue'
 import AppIcon from '../../components/AppIcon.vue'
 import EmptyState from '../../components/EmptyState.vue'
+import SheetPicker from '../../components/SheetPicker.vue'
+import ConfirmDialog from '../../components/ConfirmDialog.vue'
+import confirmDialog from '../../mixins/confirmDialog'
 import { collectionTask, collectionUpdateEntry, collectionMarkAll, collectionBatchRemove, collectionRemoveStudent, collectionAddStudents, collectionDelete, studentsList } from '../../api'
 import { downloadByUrl } from '../../api/request'
 import { kindText, fmtDateTime, isPassed } from '../../utils/format'
 
 export default {
-  components: { ProgressRing, EmptyState, AppIcon },
+  components: { ProgressRing, EmptyState, AppIcon, SheetPicker, ConfirmDialog },
+  mixins: [confirmDialog],
   data() {
     return {
       taskId: null,
@@ -160,6 +184,7 @@ export default {
       overlay: '',           // '' | 'remove' | 'add'
       removeIds: [],
       addIds: [],
+      moreSheet: false,
       allStudents: []
     }
   },
@@ -193,6 +218,14 @@ export default {
     availableStudents() {
       const used = new Set(this.entries.map((e) => e.studentId))
       return (this.allStudents || []).filter((s) => !used.has(s.id))
+    },
+    moreItems() {
+      return [
+        { key: 'add', label: '添加人员', icon: 'plus' },
+        { key: 'exportAll', label: '导出全部', icon: 'download' },
+        { key: 'exportUndone', label: `导出${this.kt.undone}`, icon: 'download' },
+        { key: 'delete', label: '删除任务', icon: 'trash' }
+      ]
     }
   },
   onLoad(query) {
@@ -249,22 +282,16 @@ export default {
       const text = target
         ? `将把全部 ${this.entries.length} 人标记为${done}，确认？`
         : `将清空全部${done}标记（${this.receivedCount} 人回${undone}），确认？`
-      uni.showModal({
-        title: '一键标记',
-        content: text,
-        confirmText: '确定',
-        success: async (res) => {
-          if (!res.confirm) return
-          try {
-            const data = await collectionMarkAll(this.taskId, target)
-            uni.showToast({
-              title: target ? `已全部标记${done}（共 ${data.total} 人）` : `已清空标记（${data.changed} 人回${undone}）`,
-              icon: 'none'
-            })
-            this.load()
-          } catch (e) {
-            /* 拦截器已提示 */
-          }
+      this.confirm({ title: '一键标记', content: text, confirmText: '确定' }, async () => {
+        try {
+          const data = await collectionMarkAll(this.taskId, target)
+          uni.showToast({
+            title: target ? `已全部标记${done}（共 ${data.total} 人）` : `已清空标记（${data.changed} 人回${undone}）`,
+            icon: 'none'
+          })
+          this.load()
+        } catch (e) {
+          /* 拦截器已提示 */
         }
       })
     },
@@ -286,12 +313,9 @@ export default {
       )
     },
     removeSingle(e) {
-      uni.showModal({
-        title: '移除人员',
-        content: `从任务名单移除 ${e.name}？其记录会一并删除。`,
-        confirmText: '移除',
-        success: async (res) => {
-          if (!res.confirm) return
+      this.confirm(
+        { title: '移除人员', content: `从任务名单移除 ${e.name}？其记录会一并删除。`, confirmText: '移除', danger: true },
+        async () => {
           try {
             await collectionRemoveStudent(this.taskId, e.studentId)
             uni.showToast({ title: '已移除', icon: 'none' })
@@ -300,32 +324,28 @@ export default {
             /* 拦截器已提示 */
           }
         }
-      })
+      )
     },
     showMore() {
-      const kt = this.kt
-      uni.showActionSheet({
-        itemList: ['添加人员', '导出全部', `导出${kt.undone}`, '删除任务'],
-        success: (res) => {
-          if (res.tapIndex === 0) {
-            this.openAdd()
-          } else if (res.tapIndex === 1) {
-            this.exportTask('all')
-          } else if (res.tapIndex === 2) {
-            this.exportTask('undelivered')
-          } else if (res.tapIndex === 3) {
-            this.deleteTask()
-          }
-        }
-      })
+      this.moreSheet = true
+    },
+    onMorePick(it) {
+      this.moreSheet = false
+      if (!it) return
+      if (it.key === 'add') this.openAdd()
+      else if (it.key === 'exportAll') this.exportTask('all')
+      else if (it.key === 'exportUndone') this.exportTask('undelivered')
+      else if (it.key === 'delete') this.deleteTask()
     },
     deleteTask() {
-      uni.showModal({
-        title: '删除任务',
-        content: `删除任务「${this.task.name}」？名单和标记记录会一起删除，不可恢复。`,
-        confirmColor: '#C96F5E',
-        success: async (res) => {
-          if (!res.confirm) return
+      this.confirm(
+        {
+          title: '删除任务',
+          content: `删除任务「${this.task.name}」？名单和标记记录会一起删除，不可恢复。`,
+          confirmText: '删除',
+          danger: true
+        },
+        async () => {
           try {
             await collectionDelete(this.taskId)
             uni.showToast({ title: '已删除', icon: 'none' })
@@ -334,7 +354,7 @@ export default {
             /* 拦截器已提示 */
           }
         }
-      })
+      )
     },
     async openAdd() {
       this.addIds = []
@@ -365,12 +385,14 @@ export default {
       const names = this.entries
         .filter((e) => this.removeIds.includes(e.studentId))
         .map((e) => e.name)
-      uni.showModal({
-        title: '批量移除',
-        content: `将从任务中移除 ${names.length} 人：${names.slice(0, 6).join('、')}${names.length > 6 ? ' 等' : ''}？记录会一并删除，不可恢复。`,
-        confirmColor: '#C96F5E',
-        success: async (res) => {
-          if (!res.confirm) return
+      this.confirm(
+        {
+          title: '批量移除',
+          content: `将从任务中移除 ${names.length} 人：${names.slice(0, 6).join('、')}${names.length > 6 ? ' 等' : ''}？记录会一并删除，不可恢复。`,
+          confirmText: '移除',
+          danger: true
+        },
+        async () => {
           try {
             const data = await collectionBatchRemove(this.taskId, this.removeIds)
             this.overlay = ''
@@ -383,7 +405,7 @@ export default {
             /* 拦截器已提示 */
           }
         }
-      })
+      )
     },
     async saveAddPersons() {
       try {

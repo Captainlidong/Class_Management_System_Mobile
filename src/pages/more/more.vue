@@ -103,6 +103,18 @@
       @close="termSheet = false"
       @select="onTermPick"
     />
+
+    <ConfirmDialog
+      :visible="dlg.visible"
+      :title="dlg.title"
+      :content="dlg.content"
+      :danger="dlg.danger"
+      :confirm-text="dlg.confirmText"
+      :cancel-text="dlg.cancelText"
+      :show-cancel="dlg.showCancel"
+      @confirm="onDlgConfirm"
+      @close="onDlgClose"
+    />
   </view>
 </template>
 
@@ -111,12 +123,15 @@ import TabBar from '../../components/TabBar.vue'
 import AppIcon from '../../components/AppIcon.vue'
 import CatWave from '../../components/cats/CatWave.vue'
 import SheetPicker from '../../components/SheetPicker.vue'
+import ConfirmDialog from '../../components/ConfirmDialog.vue'
+import confirmDialog from '../../mixins/confirmDialog'
 import { useAuthStore } from '../../stores/auth'
 import { useThemeStore } from '../../stores/theme'
 import { studentsList, todoList, notificationList, termList, termSwitch } from '../../api'
 
 export default {
-  components: { TabBar, AppIcon, CatWave, SheetPicker },
+  components: { TabBar, AppIcon, CatWave, SheetPicker, ConfirmDialog },
+  mixins: [confirmDialog],
   data() {
     return {
       studentsCount: 0,
@@ -221,7 +236,7 @@ export default {
       uni.navigateTo({ url })
     },
     about() {
-      uni.showModal({
+      this.confirm({
         title: '关于',
         content: `喵班 · 班级事务管理系统移动端 v${__APP_VERSION__}\n基于 uni-app · 数据与桌面版互通`,
         showCancel: false,
@@ -229,11 +244,9 @@ export default {
       })
     },
     logout() {
-      uni.showModal({
-        title: '退出登录',
-        content: '退出后需要重新输入账号密码和验证码，确认退出？',
-        success: async (res) => {
-          if (!res.confirm) return
+      this.confirm(
+        { title: '退出登录', content: '退出后需要重新输入账号密码和验证码，确认退出？', confirmText: '退出', danger: true },
+        async () => {
           try {
             await this.auth.logout()
             uni.reLaunch({ url: '/pages/login/login' })
@@ -241,7 +254,7 @@ export default {
             /* 拦截器已提示 */
           }
         }
-      })
+      )
     }
   }
 }

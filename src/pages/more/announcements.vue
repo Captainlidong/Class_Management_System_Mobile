@@ -48,17 +48,32 @@
     <view v-else class="card">
       <EmptyState text="还没有群发素材" />
     </view>
+
+    <ConfirmDialog
+      :visible="dlg.visible"
+      :title="dlg.title"
+      :content="dlg.content"
+      :danger="dlg.danger"
+      :confirm-text="dlg.confirmText"
+      :cancel-text="dlg.cancelText"
+      :show-cancel="dlg.showCancel"
+      @confirm="onDlgConfirm"
+      @close="onDlgClose"
+    />
   </view>
 </template>
 
 <script>
 import EmptyState from '../../components/EmptyState.vue'
+import ConfirmDialog from '../../components/ConfirmDialog.vue'
+import confirmDialog from '../../mixins/confirmDialog'
 import { announcementList, announcementDetail, announcementUploadFiles, announcementMarkSent, announcementUnmarkSent, announcementDelete } from '../../api'
 // announcementDeleteFile 暂未在移动端暴露（删除附件走桌面版更稳妥）
 import { downloadByUrl } from '../../api/request'
 
 export default {
-  components: { EmptyState },
+  components: { EmptyState, ConfirmDialog },
+  mixins: [confirmDialog],
   data() {
     return {
       rows: [],
@@ -123,12 +138,9 @@ export default {
         .catch(() => {})
     },
     removeAnn(a) {
-      uni.showModal({
-        title: '删除素材',
-        content: `删除「${a.title}」？附件与历史版本会一并删除。`,
-        confirmColor: '#C96F5E',
-        success: async (res) => {
-          if (!res.confirm) return
+      this.confirm(
+        { title: '删除素材', content: `删除「${a.title}」？附件与历史版本会一并删除。`, confirmText: '删除', danger: true },
+        async () => {
           try {
             await announcementDelete(a.id)
             uni.showToast({ title: '已删除', icon: 'none' })
@@ -137,7 +149,7 @@ export default {
             /* 拦截器已提示 */
           }
         }
-      })
+      )
     }
   }
 }

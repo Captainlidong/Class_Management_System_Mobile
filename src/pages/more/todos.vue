@@ -90,12 +90,26 @@
         </button>
       </view>
     </view>
+
+    <ConfirmDialog
+      :visible="dlg.visible"
+      :title="dlg.title"
+      :content="dlg.content"
+      :danger="dlg.danger"
+      :confirm-text="dlg.confirmText"
+      :cancel-text="dlg.cancelText"
+      :show-cancel="dlg.showCancel"
+      @confirm="onDlgConfirm"
+      @close="onDlgClose"
+    />
   </view>
 </template>
 
 <script>
 import EmptyState from '../../components/EmptyState.vue'
 import AppIcon from '../../components/AppIcon.vue'
+import ConfirmDialog from '../../components/ConfirmDialog.vue'
+import confirmDialog from '../../mixins/confirmDialog'
 import { todoList, todoCreate, todoUpdate, todoDelete } from '../../api'
 import { fmtDateTime } from '../../utils/format'
 
@@ -110,7 +124,8 @@ const REPEAT_KEYS = ['none', 'daily', 'weekly', 'monthly']
 const REPEAT_LABELS = ['不重复', '每天', '每周', '每月']
 
 export default {
-  components: { EmptyState, AppIcon },
+  components: { EmptyState, AppIcon, ConfirmDialog },
+  mixins: [confirmDialog],
   data() {
     return {
       todos: [],
@@ -220,12 +235,9 @@ export default {
       }
     },
     remove(t) {
-      uni.showModal({
-        title: '删除待办',
-        content: `删除「${t.title}」？不可恢复。`,
-        confirmColor: '#C96F5E',
-        success: async (res) => {
-          if (!res.confirm) return
+      this.confirm(
+        { title: '删除待办', content: `删除「${t.title}」？不可恢复。`, confirmText: '删除', danger: true },
+        async () => {
           try {
             await todoDelete(t.id)
             uni.showToast({ title: '已删除', icon: 'none' })
@@ -234,7 +246,7 @@ export default {
             /* 拦截器已提示 */
           }
         }
-      })
+      )
     }
   }
 }

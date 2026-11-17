@@ -41,18 +41,33 @@
     <view v-else class="card">
       <EmptyState text="暂无筛查历史" />
     </view>
+
+    <ConfirmDialog
+      :visible="dlg.visible"
+      :title="dlg.title"
+      :content="dlg.content"
+      :danger="dlg.danger"
+      :confirm-text="dlg.confirmText"
+      :cancel-text="dlg.cancelText"
+      :show-cancel="dlg.showCancel"
+      @confirm="onDlgConfirm"
+      @close="onDlgClose"
+    />
   </view>
 </template>
 
 <script>
 import EmptyState from '../../components/EmptyState.vue'
+import ConfirmDialog from '../../components/ConfirmDialog.vue'
+import confirmDialog from '../../mixins/confirmDialog'
 import { checkRecords, checkRecord, checkRecordDelete } from '../../api'
 import { fmtDateTime } from '../../utils/format'
 
 const EMPTY_DETAIL = { participated: [], absent: [], invalid: [], duplicates: [] }
 
 export default {
-  components: { EmptyState },
+  components: { EmptyState, ConfirmDialog },
+  mixins: [confirmDialog],
   data() {
     return {
       rows: [],
@@ -94,12 +109,9 @@ export default {
       }
     },
     remove(r) {
-      uni.showModal({
-        title: '删除记录',
-        content: `删除「${r.title}」？不可恢复。`,
-        confirmColor: '#C96F5E',
-        success: async (res) => {
-          if (!res.confirm) return
+      this.confirm(
+        { title: '删除记录', content: `删除「${r.title}」？不可恢复。`, confirmText: '删除', danger: true },
+        async () => {
           try {
             await checkRecordDelete(r.id)
             uni.showToast({ title: '已删除', icon: 'none' })
@@ -108,7 +120,7 @@ export default {
             /* 拦截器已提示 */
           }
         }
-      })
+      )
     }
   }
 }
