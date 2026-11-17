@@ -315,7 +315,10 @@ export default {
       return `截止 ${fmtDateTime(t.dueAt)}`
     },
     goMore() {
-      uni.switchTab({ url: '/pages/more/more' })
+      uni.navigateTo({ url: '/pages/more/notifications' })
+    },
+    goTodos() {
+      uni.navigateTo({ url: '/pages/more/todos' })
     },
     goCollection() {
       uni.redirectTo({ url: '/pages/collection/list' })

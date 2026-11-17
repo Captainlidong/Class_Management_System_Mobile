@@ -2,8 +2,8 @@
     "name" : "喵班",
     "appid" : "__UNI__CD0D162",
     "description" : "班级成员管理系统移动端",
-    "versionName" : "2.3.2",
-    "versionCode" : 112,
+    "versionName" : "2.3.3",
+    "versionCode" : 113,
     "vueVersion" : "3",
     "locale" : "zh-Hans",
     "h5" : {

@@ -56,6 +56,9 @@ export const announcementDeleteFile = (id, fileId) =>
 export const announcementMarkSent = (id) => post(`/announcements/${id}/mark-sent`)
 export const announcementUnmarkSent = (id) => post(`/announcements/${id}/unmark-sent`)
 export const announcementDelete = (id) => del(`/announcements/${id}`)
+export const announcementCreate = (body) => post('/announcements', body)
+export const announcementUpdate = (id, body) => put(`/announcements/${id}`, body)
+export const announcementSetPinned = (id, pinned) => patch(`/announcements/${id}/pin`, { pinned })
 
 /* —— 待办事务 —— */
 export const todoList = () => get('/todos')
