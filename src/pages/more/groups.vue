@@ -104,7 +104,8 @@ export default {
     copyName(m) {
       uni.setClipboardData({
         data: m.name,
-        success: () => uni.showToast({ title: `已复制「${m.name}」`, icon: 'none' })
+        success: () => uni.showToast({ title: `已复制「${m.name}」`, icon: 'none' }),
+        fail: () => uni.showToast({ title: '复制失败，请手动选择文本', icon: 'none' })
       })
     }
   }

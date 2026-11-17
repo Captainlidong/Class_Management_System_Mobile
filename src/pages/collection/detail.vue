@@ -304,7 +304,8 @@ export default {
       const text = this.kt.copyTemplate(names.join('、'), this.task.name)
       uni.setClipboardData({
         data: text,
-        success: () => uni.showToast({ title: `已复制 ${names.length} 位${this.kt.undone}同学名单`, icon: 'none' })
+        success: () => uni.showToast({ title: `已复制 ${names.length} 位${this.kt.undone}同学名单`, icon: 'none' }),
+        fail: () => uni.showToast({ title: '复制失败，请手动选择文本', icon: 'none' })
       })
     },
     exportTask(scope) {

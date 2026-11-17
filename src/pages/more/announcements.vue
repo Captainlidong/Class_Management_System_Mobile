@@ -271,7 +271,8 @@ export default {
       }
       uni.setClipboardData({
         data: text,
-        success: () => uni.showToast({ title: a.editedText ? '已复制改好的版本' : '已复制原件', icon: 'none' })
+        success: () => uni.showToast({ title: a.editedText ? '已复制改好的版本' : '已复制原件', icon: 'none' }),
+        fail: () => uni.showToast({ title: '复制失败，请手动选择文本', icon: 'none' })
       })
     },
     async togglePin(a) {
